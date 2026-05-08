@@ -48,7 +48,7 @@ Format your response exactly with these markdown sections:
 Keep it concise, professional, and actionable. Do not output anything outside of these sections.`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.1-pro-preview',
+        model: 'gemini-2.5-flash',
         contents: prompt,
         config: {
           temperature: 0.4
