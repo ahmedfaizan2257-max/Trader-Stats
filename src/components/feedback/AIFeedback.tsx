@@ -23,7 +23,9 @@ export function AIFeedback() {
 
     try {
       // The AI Studio environment injects process.env.GEMINI_API_KEY through Vite
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      // For external hosting (like Netlify), we use import.meta.env.VITE_GEMINI_API_KEY
+      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
+      const ai = new GoogleGenAI({ apiKey });
       
       const prompt = `You are an expert trading coach. Analyze the following trading log and provide a detailed, constructive feedback report.
       
@@ -56,7 +58,11 @@ Keep it concise, professional, and actionable. Do not output anything outside of
       setFeedback(response.text || "No feedback generated.");
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An error occurred while generating feedback.");
+      let errorMessage = err.message || "An error occurred while generating feedback.";
+      if (errorMessage.includes("API key not valid") || errorMessage.includes("API Key must be set")) {
+        errorMessage = "Error: Gemini API key is missing. Since you are hosting outside AI Studio, please add VITE_GEMINI_API_KEY to your Netlify site Environment Variables and trigger a new deployment.";
+      }
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
