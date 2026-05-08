@@ -11,6 +11,8 @@ import { LandingPage } from './components/landing/LandingPage';
 import { Tab } from './types';
 import { Menu, X, Hexagon } from 'lucide-react';
 
+import { Toaster } from 'sonner';
+
 export default function App() {
   const [appMode, setAppMode] = useState<'landing' | 'app'>('landing');
   const [currentTab, setCurrentTab] = useState<Tab>('dashboard');
@@ -23,6 +25,7 @@ export default function App() {
   return (
     <TradeProvider>
       <div className="flex h-screen overflow-hidden bg-slate-950 font-sans selection:bg-[#5b32f6]/30 selection:text-[#5b32f6]">
+        <Toaster theme="dark" position="top-right" />
         
         <div className="hidden md:flex">
           <Sidebar currentTab={currentTab} onTabSelect={setCurrentTab} onBack={() => setAppMode('landing')} />

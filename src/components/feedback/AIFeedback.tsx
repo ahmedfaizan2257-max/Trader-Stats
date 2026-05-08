@@ -4,6 +4,7 @@ import { GoogleGenAI } from '@google/genai';
 import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import Markdown from 'react-markdown';
+import { toast } from 'sonner';
 
 export function AIFeedback() {
   const { trades } = useTrades();
@@ -56,6 +57,7 @@ Keep it concise, professional, and actionable. Do not output anything outside of
       });
 
       setFeedback(response.text || "No feedback generated.");
+      toast.success('Successfully analyzed trades');
     } catch (err: any) {
       console.error(err);
       let errorMessage = err.message || "An error occurred while generating feedback.";
@@ -63,6 +65,7 @@ Keep it concise, professional, and actionable. Do not output anything outside of
         errorMessage = "Error: Gemini API key is missing. Since you are hosting outside AI Studio, please add VITE_GEMINI_API_KEY to your Netlify site Environment Variables and trigger a new deployment.";
       }
       setError(errorMessage);
+      toast.error('Failed to generate analysis');
     } finally {
       setIsLoading(false);
     }

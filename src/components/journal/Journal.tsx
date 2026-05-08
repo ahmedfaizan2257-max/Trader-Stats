@@ -3,6 +3,7 @@ import { useTrades } from '../../context/TradeContext';
 import { JournalEntry } from '../../types';
 import { cn } from '../../lib/utils';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 const EMOTIONS = [
   { emoji: '😊', label: 'Confident' },
@@ -27,7 +28,6 @@ export function Journal() {
   const [notes, setNotes] = useState(currentEntry.notes);
   const [emotion, setEmotion] = useState(currentEntry.emotion);
   const [followedPlan, setFollowedPlan] = useState<'Yes'|'No'|'Partial'>(currentEntry.followedPlan);
-  const [saveStatus, setSaveStatus] = useState<string>('');
 
   // Update local state when date changes
   const handleDateChange = (newDate: string) => {
@@ -42,7 +42,6 @@ export function Journal() {
       setEmotion('😐');
       setFollowedPlan('Partial');
     }
-    setSaveStatus('');
   };
 
   const handleSave = () => {
@@ -53,8 +52,7 @@ export function Journal() {
       emotion,
       followedPlan
     });
-    setSaveStatus('Saved successfully!');
-    setTimeout(() => setSaveStatus(''), 3000);
+    toast.success('Journal entry saved successfully!');
   };
 
   return (
@@ -146,7 +144,6 @@ export function Journal() {
             >
               Save Journal Entry
             </button>
-            {saveStatus && <span className="text-sm text-green-400 animate-in fade-in">{saveStatus}</span>}
           </div>
         </div>
       </div>

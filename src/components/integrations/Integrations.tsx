@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link2, Shield, Search, X, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { toast } from 'sonner';
 
 const platforms = [
   { id: 'ninjatrader', name: 'NinjaTrader', icon: 'N', status: 'available' },
@@ -35,6 +36,7 @@ export function Integrations() {
     
     setConnectedPlatforms(prev => [...prev, selectedPlatform.id]);
     setIsConnecting(false);
+    toast.success(`Successfully connected to ${selectedPlatform.name}`);
     setSelectedPlatform(null);
     setApiKey('');
     setApiSecret('');
@@ -45,6 +47,7 @@ export function Integrations() {
     if (platformToDisconnect === platformId) {
       setConnectedPlatforms(prev => prev.filter(id => id !== platformId));
       setPlatformToDisconnect(null);
+      toast.success('Platform disconnected successfully');
     } else {
       setPlatformToDisconnect(platformId);
       setTimeout(() => setPlatformToDisconnect(null), 3000);

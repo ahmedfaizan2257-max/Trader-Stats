@@ -4,6 +4,7 @@ import { Trade, Direction } from '../../types';
 import { parseNumericString, formatCurrency, cn } from '../../lib/utils';
 import { Trash2, Plus, Upload, LineChart } from 'lucide-react';
 import Papa from 'papaparse';
+import { toast } from 'sonner';
 import { TradingViewModal } from './TradingViewModal';
 
 export function TradeLog() {
@@ -70,6 +71,10 @@ export function TradeLog() {
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+        toast.success(`Successfully imported ${parsedTrades.length} trades`);
+      },
+      error: (error) => {
+        toast.error(`Failed to parse CSV: ${error.message}`);
       }
     });
   };
@@ -88,6 +93,7 @@ export function TradeLog() {
                 if (confirmClear) {
                   clearAllTrades();
                   setConfirmClear(false);
+                  toast.success('All trades have been cleared');
                 } else {
                   setConfirmClear(true);
                   setTimeout(() => setConfirmClear(false), 3000); // reset after 3s
@@ -127,7 +133,7 @@ export function TradeLog() {
       </div>
 
       {isAdding && (
-        <AddTradeForm onClose={() => setIsAdding(false)} onAdd={(t) => { addTrade(t); setIsAdding(false); }} />
+        <AddTradeForm onClose={() => setIsAdding(false)} onAdd={(t) => { addTrade(t); setIsAdding(false); toast.success('Trade added successfully'); }} />
       )}
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
@@ -184,7 +190,7 @@ export function TradeLog() {
                           <LineChart className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => deleteTrade(trade.id)}
+                          onClick={() => { deleteTrade(trade.id); toast.success('Trade deleted'); }}
                           className="text-slate-500 hover:text-red-400 transition-colors"
                           title="Delete trade"
                         >

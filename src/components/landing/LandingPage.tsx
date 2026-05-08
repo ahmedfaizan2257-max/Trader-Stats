@@ -35,6 +35,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
           
           <div className="hidden md:flex items-center gap-8">
             <button onClick={() => handleNav('home', 'features')} className="text-sm font-bold text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">BENEFITS</button>
+            <button onClick={() => handleNav('home', 'reviews')} className="text-sm font-bold text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">REVIEWS</button>
             <button onClick={() => handleNav('home', 'pricing')} className="text-sm font-bold text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">PRICING</button>
             <button onClick={() => handleNav('platforms')} className="text-sm font-bold text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">PLATFORMS</button>
             <button onClick={() => handleNav('leaderboard')} className="text-sm font-bold text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">LEADERBOARD</button>
@@ -54,6 +55,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
         {mobileMenuOpen && (
           <div className="md:hidden bg-[#09090b] border-b border-white/5 py-4 px-6 flex flex-col gap-4">
             <button onClick={() => handleNav('home', 'features')} className="text-left text-sm font-bold text-white uppercase tracking-widest">BENEFITS</button>
+            <button onClick={() => handleNav('home', 'reviews')} className="text-left text-sm font-bold text-white uppercase tracking-widest">REVIEWS</button>
             <button onClick={() => handleNav('home', 'pricing')} className="text-left text-sm font-bold text-white uppercase tracking-widest">PRICING</button>
             <button onClick={() => handleNav('platforms')} className="text-left text-sm font-bold text-white uppercase tracking-widest">PLATFORMS</button>
             <button onClick={() => handleNav('leaderboard')} className="text-left text-sm font-bold text-white uppercase tracking-widest">LEADERBOARD</button>
@@ -247,6 +249,61 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
         </div>
       </section>
 
+      <section id="reviews" className="py-24 bg-[#010101] border-t border-slate-900">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-[#5b32f6] font-bold tracking-wide uppercase text-sm mb-3">Wall of Love</h2>
+            <h3 className="text-3xl md:text-5xl font-bold text-white mb-6">Traders love TradeEdge.</h3>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't just take our word for it. See what our community has to say about tracking their edge.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <ReviewCard
+              author="Alex Rodriguez"
+              role="Funded Proprietary Trader"
+              content="TradeEdge completely changed how I review my trading. Before, I was using messy spreadsheets. Now the AI points out exactly where I leak money. Highly recommend!"
+              image="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+              rating={5}
+            />
+            <ReviewCard
+              author="Sarah Jenkins"
+              role="Independent Day Trader"
+              content="The TradingView integration is a game changer for my reviews. Being able to see my executions right on the chart without opening my broker saves me hours every weekend."
+              image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+              rating={5}
+            />
+            <ReviewCard
+              author="Michael Chen"
+              role="Swing Trader"
+              content="Finally, a journal that isn't clunky. Fast, beautiful, and gives me exactly the metrics I need. I realized I was losing most of my profits on Thursdays and adjusted my plan."
+              image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+              rating={5}
+            />
+            <ReviewCard
+              author="David Torres"
+              role="Crypto Trader"
+              content="I've tried almost every journaling tool out there, and TradeEdge is by far the cleanest. The setup tracking helped me figure out my most profitable edge."
+              image="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+              rating={4}
+            />
+             <ReviewCard
+              author="Jessica Wu"
+              role="Options Trader"
+              content="The risk/reward metrics and heatmaps are incredible. It visualizes my performance in a way that actually makes sense. Worth every penny."
+              image="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+              rating={5}
+            />
+            <ReviewCard
+              author="Kevin Patel"
+              role="Forex Trader"
+              content="Super clean UI. I log my trades immediately after closing them now because it's so quick. The AI insights alone have paid for my subscription ten times over."
+              image="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+              rating={5}
+            />
+          </div>
+        </div>
+      </section>
+
       <section id="pricing" className="py-24 border-t border-slate-900 bg-[#000000]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
@@ -358,6 +415,28 @@ function FeatureSection({ title, description, icon, imageUrl, reverse }: { title
               </div>
             </>
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReviewCard({ author, role, content, image, rating }: { author: string, role: string, content: string, image: string, rating: number }) {
+  return (
+    <div className="bg-[#09090b] border border-slate-800 rounded-3xl p-8 hover:border-[#5b32f6]/30 transition-colors flex flex-col justify-between">
+      <div>
+        <div className="flex gap-1 mb-6">
+          {Array.from({ length: rating }).map((_, i) => (
+            <Star key={i} className="w-5 h-5 fill-[#5b32f6] text-[#5b32f6]" />
+          ))}
+        </div>
+        <p className="text-slate-300 text-lg leading-relaxed mb-8">"{content}"</p>
+      </div>
+      <div className="flex items-center gap-4">
+        <img src={image} alt={author} className="w-12 h-12 rounded-full object-cover border border-slate-700" referrerPolicy="no-referrer" />
+        <div>
+          <h5 className="font-bold text-white tracking-wide">{author}</h5>
+          <p className="text-xs text-[#5b32f6] uppercase tracking-wider">{role}</p>
         </div>
       </div>
     </div>
