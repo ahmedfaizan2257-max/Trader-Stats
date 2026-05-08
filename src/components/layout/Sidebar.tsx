@@ -1,0 +1,95 @@
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, Clock, ArrowLeft, Link2 } from 'lucide-react';
+import { Tab } from '../../types';
+import { cn } from '../../lib/utils';
+
+export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, onTabSelect: (val: Tab) => void, onBack?: () => void }) {
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'log', label: 'Trade Log', icon: Briefcase },
+    { id: 'feedback', label: 'AI Feedback', icon: MessageSquare },
+    { id: 'journal', label: 'Journal', icon: BookOpen },
+    { id: 'analytics', label: 'Analytics', icon: LineChart },
+    { id: 'integrations', label: 'Integrations', icon: Link2 },
+  ] as const;
+
+  return (
+    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen flex-shrink-0">
+      <div className="p-6 border-b border-slate-800/60">
+        <div 
+          className="flex items-center gap-2 mb-6 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={onBack}
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="text-[#5b32f6]">
+            <rect x="4" y="14" width="4" height="6" rx="1.5" />
+            <rect x="10" y="8" width="4" height="12" rx="1.5" />
+            <rect x="16" y="2" width="4" height="18" rx="1.5" />
+          </svg>
+          <h1 className="text-2xl font-bold tracking-tight text-[#5b32f6] lowercase">
+            traderstats
+          </h1>
+        </div>
+        
+        {/* Account Selector */}
+        <button className="w-full flex items-center justify-between bg-slate-950 border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-lg transition-colors">
+          <div className="flex flex-col items-start gap-0.5">
+             <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Trading Account</span>
+             <span className="text-sm font-semibold text-slate-200">Main Futures (NQ)</span>
+          </div>
+          <ChevronDown className="w-4 h-4 text-slate-500" />
+        </button>
+      </div>
+
+      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-none">
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => onTabSelect(item.id)}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium",
+              currentTab === item.id 
+                ? "bg-slate-800 text-[#5b32f6] shadow-xs border border-slate-700"
+                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent"
+            )}
+          >
+            <item.icon className={cn("w-5 h-5", currentTab === item.id ? "text-[#5b32f6]" : "text-slate-500")} />
+            {item.label}
+          </button>
+        ))}
+      </nav>
+      
+      {/* 14 Day Free Trial Banner */}
+      <div className="p-4 mx-4 mb-4 bg-gradient-to-br from-[#5b32f6]/20 to-slate-900 border border-[#5b32f6]/30 rounded-xl relative overflow-hidden group cursor-pointer hover:border-[#5b32f6]/50 transition-colors">
+         <div className="absolute top-0 right-0 w-24 h-24 bg-[#5b32f6]/20 blur-xl rounded-full"></div>
+         <div className="relative z-10">
+            <div className="flex items-center gap-2 text-[#5b32f6] mb-1">
+               <Clock className="w-4 h-4" />
+               <span className="text-xs font-bold uppercase tracking-wider">Free Trial</span>
+            </div>
+            <p className="text-sm font-semibold text-slate-200 mb-2">14 days remaining</p>
+            <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden mb-3">
+               <div className="bg-[#5b32f6] w-1/12 h-full rounded-full"></div>
+            </div>
+            <p className="text-[10px] text-slate-400 leading-relaxed mb-3">
+              Upgrade to Pro for unlimited gigabytes of cloud storage & unlimited accounts.
+            </p>
+            <button className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-2 rounded-lg text-xs transition-colors">
+               Upgrade Plan
+            </button>
+         </div>
+      </div>
+
+      <div className="p-4 border-t border-slate-800 flex justify-between items-center">
+        <p className="text-xs text-slate-500 font-mono">v1.0.0-beta</p>
+        {onBack && (
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            title="Back to website"
+          >
+            <ArrowLeft className="w-3 h-3" /> Back
+          </button>
+        )}
+      </div>
+    </aside>
+  );
+}
