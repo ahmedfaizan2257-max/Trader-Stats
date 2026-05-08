@@ -6,7 +6,7 @@ export function PlatformsPage() {
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">Supported <span className="text-[#5b32f6]">Platforms</span>.</h1>
         <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-          Seamlessly connect your trading accounts. TraderStats supports a wide range of platforms to automatically sync and analyze your executions.
+          Seamlessly connect your trading accounts. TradeEdge supports a wide range of platforms to automatically sync and analyze your executions.
         </p>
       </div>
       

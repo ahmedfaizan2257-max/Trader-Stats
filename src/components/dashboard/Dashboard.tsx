@@ -75,7 +75,7 @@ export function Dashboard() {
             </div>
           ))}
           {emptyDaysStart.map((_, i) => (
-            <div key={`empty-${i}`} className="h-24 rounded-xl border border-slate-800/50 bg-slate-900/20" />
+            <div key={`empty-${i}`} className="min-h-[64px] sm:h-24 rounded-xl border border-slate-800/50 bg-slate-900/20" />
           ))}
           
           {daysInMonth.map(day => {
@@ -92,15 +92,15 @@ export function Dashboard() {
 
             return (
               <div key={day.toISOString()} className={cn(
-                "h-24 rounded-xl border p-2 flex flex-col justify-between transition-colors",
+                "min-h-[64px] sm:h-24 rounded-xl border p-1.5 sm:p-2 flex flex-col justify-between transition-colors",
                 bgClass,
                 isFuture && "opacity-30"
               )}>
-                <span className="text-xs font-mono opacity-60 self-end">{format(day, 'd')}</span>
+                <span className="text-[10px] sm:text-xs font-mono opacity-60 self-end">{format(day, 'd')}</span>
                 {dayTrades.length > 0 && (
-                  <div className="text-sm font-mono font-medium truncate">
+                  <div className="text-[10px] sm:text-sm font-mono font-medium truncate">
                     {formatCurrency(dayPnl)}
-                    <div className="text-[10px] opacity-70 font-sans mt-0.5">{dayTrades.length} trade{dayTrades.length > 1 ? 's' : ''}</div>
+                    <div className="hidden sm:block text-[10px] opacity-70 font-sans mt-0.5">{dayTrades.length} trade{dayTrades.length > 1 ? 's' : ''}</div>
                   </div>
                 )}
               </div>

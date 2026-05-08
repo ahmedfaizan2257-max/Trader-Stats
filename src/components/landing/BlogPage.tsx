@@ -43,7 +43,7 @@ export function BlogPage() {
   return (
     <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-[80vh] flex flex-col items-center">
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">TraderStats <span className="text-[#5b32f6]">Blog</span>.</h1>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">TradeEdge <span className="text-[#5b32f6]">Blog</span>.</h1>
         <p className="text-xl text-slate-400 max-w-2xl mx-auto">
           Insights, strategies, and updates to help you find your edge and improve your execution.
         </p>

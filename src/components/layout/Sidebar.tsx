@@ -1,4 +1,4 @@
-import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, Clock, ArrowLeft, Link2 } from 'lucide-react';
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, Clock, ArrowLeft, Link2, Hexagon } from 'lucide-react';
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
 
@@ -19,13 +19,9 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
           className="flex items-center gap-2 mb-6 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={onBack}
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="text-[#5b32f6]">
-            <rect x="4" y="14" width="4" height="6" rx="1.5" />
-            <rect x="10" y="8" width="4" height="12" rx="1.5" />
-            <rect x="16" y="2" width="4" height="18" rx="1.5" />
-          </svg>
-          <h1 className="text-2xl font-bold tracking-tight text-[#5b32f6] lowercase">
-            traderstats
+          <Hexagon className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
+          <h1 className="text-2xl font-bold tracking-tight text-[#5b32f6]">
+            TradeEdge
           </h1>
         </div>
         

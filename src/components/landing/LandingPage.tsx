@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, Brain, Calendar, CheckCircle2, ChevronRight, LineChart, Shield, Zap, Star, Menu, Twitter, BookOpen } from 'lucide-react';
+import { ArrowRight, BarChart3, Brain, Calendar, CheckCircle2, ChevronRight, LineChart, Shield, Zap, Star, Menu, Twitter, BookOpen, Hexagon } from 'lucide-react';
 import { useState } from 'react';
 import { PlatformsPage } from './PlatformsPage';
 import { LeaderboardPage } from './LeaderboardPage';
@@ -27,13 +27,9 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
       <nav className="fixed top-0 w-full z-50 bg-[#000000] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('home')}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="text-[#5b32f6]">
-              <rect x="4" y="14" width="4" height="6" rx="1.5" />
-              <rect x="10" y="8" width="4" height="12" rx="1.5" />
-              <rect x="16" y="2" width="4" height="18" rx="1.5" />
-            </svg>
-            <span className="text-2xl font-bold tracking-tight text-[#5b32f6] lowercase">
-              traderstats
+            <Hexagon className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
+            <span className="text-2xl font-bold tracking-tight text-[#5b32f6]">
+              TradeEdge
             </span>
           </div>
           
@@ -81,13 +77,9 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-[#5b32f6]">
-                <rect x="4" y="14" width="4" height="6" rx="1.5" />
-                <rect x="10" y="8" width="4" height="12" rx="1.5" />
-                <rect x="16" y="2" width="4" height="18" rx="1.5" />
-              </svg>
-              <span className="text-xl font-bold tracking-tight text-[#5b32f6] lowercase">
-                traderstats
+              <Hexagon className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
+              <span className="text-xl font-bold tracking-tight text-[#5b32f6]">
+                TradeEdge
               </span>
             </div>
             <p className="text-slate-400 max-w-sm mb-6">
@@ -118,7 +110,11 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-900 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-          <p>© 2026 TraderStats. All rights reserved.</p>
+          <p>
+            © 2026 TradeEdge. All rights reserved. 
+            <span className="mx-2">|</span> 
+            Developed by <a href="https://godesign.pk" target="_blank" rel="noreferrer" className="hover:text-[#5b32f6] transition-colors">GoDesign Technologies LLP</a>
+          </p>
           <div className="flex gap-6">
             <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#5b32f6]"></div> System Operational</span>
           </div>
@@ -307,7 +303,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <h3 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">Stop guessing. Start tracking.</h3>
           <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
-            Join thousands of traders who have found their consistency with TraderStats. 
+            Join thousands of traders who have found their consistency with TradeEdge. 
             No credit card required for the 14-day trial.
           </p>
           <button onClick={onEnter} className="px-10 py-5 bg-[#5b32f6] hover:bg-[#4a26d7] text-white rounded-2xl font-bold text-xl shadow-[0_0_30px_rgba(91,50,246,0.4)] transition-all flex items-center justify-center gap-3 mx-auto">

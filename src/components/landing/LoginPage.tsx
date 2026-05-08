@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Hexagon } from 'lucide-react';
 
 export function LoginPage({ onEnter }: { onEnter: () => void }) {
   return (
@@ -8,13 +8,9 @@ export function LoginPage({ onEnter }: { onEnter: () => void }) {
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#5b32f6] to-cyan-400"></div>
         
         <div className="flex items-center justify-center gap-2 mb-8">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="text-[#5b32f6]">
-            <rect x="4" y="14" width="4" height="6" rx="1.5" />
-            <rect x="10" y="8" width="4" height="12" rx="1.5" />
-            <rect x="16" y="2" width="4" height="18" rx="1.5" />
-          </svg>
-          <span className="text-2xl font-bold tracking-tight text-[#5b32f6] lowercase">
-            traderstats
+          <Hexagon className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
+          <span className="text-2xl font-bold tracking-tight text-[#5b32f6]">
+            TradeEdge
           </span>
         </div>
 
@@ -28,7 +24,7 @@ export function LoginPage({ onEnter }: { onEnter: () => void }) {
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Email address</label>
             <input 
               type="email" 
-              defaultValue="demo@traderstats.app"
+              defaultValue="demo@tradeedge.app"
               required 
               className="w-full bg-[#18181b] border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-[#5b32f6] transition-colors focus:ring-1 focus:ring-[#5b32f6]" 
             />
