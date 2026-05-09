@@ -57,6 +57,7 @@ export function TradeLog() {
           return {
             id: crypto.randomUUID(),
             date: dateStr,
+            account: row.Account || row.account || 'Imported CSV',
             symbol: (row.Symbol || row.symbol || 'UNKNOWN').toUpperCase(),
             direction,
             entryPrice,
@@ -142,6 +143,7 @@ export function TradeLog() {
             <thead className="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-widest">
               <tr>
                 <th className="px-6 py-4 font-medium">Date</th>
+                <th className="px-6 py-4 font-medium">Account</th>
                 <th className="px-6 py-4 font-medium">Symbol</th>
                 <th className="px-6 py-4 font-medium">Dir</th>
                 <th className="px-6 py-4 font-medium">Entry</th>
@@ -155,12 +157,13 @@ export function TradeLog() {
             <tbody className="divide-y divide-slate-800/50">
               {trades.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-6 py-8 text-center text-slate-500">No trades logged yet.</td>
+                  <td colSpan={10} className="px-6 py-8 text-center text-slate-500">No trades logged yet.</td>
                 </tr>
               ) : (
                 [...trades].reverse().map(trade => (
                   <tr key={trade.id} className="hover:bg-slate-800/30 transition-colors group">
                     <td className="px-6 py-4 font-mono text-slate-300">{trade.date}</td>
+                    <td className="px-6 py-4 font-semibold text-slate-400">{trade.account || 'Manual'}</td>
                     <td className="px-6 py-4 font-semibold">{trade.symbol}</td>
                     <td className="px-6 py-4">
                       <span className={cn(
@@ -218,6 +221,7 @@ export function TradeLog() {
 
 function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trade) => void }) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [account, setAccount] = useState('Manual');
   const [symbol, setSymbol] = useState('');
   const [direction, setDirection] = useState<Direction>('Long');
   const [entryPrice, setEntryPrice] = useState('');
@@ -248,6 +252,7 @@ function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trad
     onAdd({
       id: crypto.randomUUID(),
       date,
+      account,
       symbol: symbol.toUpperCase(),
       direction,
       entryPrice: parseFloat(entryPrice),
@@ -267,6 +272,12 @@ function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trad
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Date</label>
           <input type="date" required value={date} onChange={e => setDate(e.target.value)}
             className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Account</label>
+          <input type="text" placeholder="e.g. Robinhood, NinjaTrader" value={account} onChange={e => setAccount(e.target.value)}
+            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
         </div>
 
         <div className="flex flex-col gap-1">
@@ -318,7 +329,7 @@ function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trad
           </div>
         </div>
 
-        <div className="flex flex-col gap-1 md:col-span-2 lg:col-span-4">
+        <div className="flex flex-col gap-1 lg:col-span-3">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Notes</label>
           <input type="text" placeholder="Why did you take this trade?" value={notes} onChange={e => setNotes(e.target.value)}
             className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />

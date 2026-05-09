@@ -14,16 +14,16 @@ export function LeaderboardPage() {
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-[80vh] flex flex-col items-center">
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">Global <span className="text-[#5b32f6]">Leaderboard</span>.</h1>
-        <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Global <span className="text-[#5b32f6]">Leaderboard</span>.</h1>
+        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
           See how you stack up against the best. Top performers based on verified trade executions and consistent risk management.
         </p>
       </div>
 
-      <div className="w-full bg-[#09090b] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="w-full bg-slate-50 dark:bg-[#09090b] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#18181b] border-b border-slate-800">
+            <thead className="bg-white dark:bg-[#18181b] border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Rank</th>
                 <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Trader</th>
@@ -34,15 +34,15 @@ export function LeaderboardPage() {
             </thead>
             <tbody className="divide-y divide-slate-800/50">
               {leaders.map((leader) => (
-                <tr key={leader.rank} className="hover:bg-[#18181b]/50 transition-colors">
+                <tr key={leader.rank} className="hover:bg-white dark:bg-[#18181b]/50 transition-colors">
                   <td className="px-6 py-5">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${leader.rank <= 3 ? 'bg-[#5b32f6]/20 text-[#5b32f6]' : 'bg-slate-900 border border-slate-800 text-slate-400'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${leader.rank <= 3 ? 'bg-[#5b32f6]/20 text-[#5b32f6]' : 'bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'}`}>
                       #{leader.rank}
                     </div>
                   </td>
-                  <td className="px-6 py-5 font-bold text-slate-200">{leader.name}</td>
-                  <td className="px-6 py-5 text-slate-300 font-mono">{leader.winRate}</td>
-                  <td className="px-6 py-5 text-slate-300 font-mono">{leader.profitFactor}</td>
+                  <td className="px-6 py-5 font-bold text-slate-800 dark:text-slate-200">{leader.name}</td>
+                  <td className="px-6 py-5 text-slate-700 dark:text-slate-300 font-mono">{leader.winRate}</td>
+                  <td className="px-6 py-5 text-slate-700 dark:text-slate-300 font-mono">{leader.profitFactor}</td>
                   <td className="px-6 py-5 text-[#5b32f6] font-bold font-mono text-right">{leader.pnl}</td>
                 </tr>
               ))}

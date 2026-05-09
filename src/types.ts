@@ -10,6 +10,7 @@ export interface Trade {
   contracts: number;
   pnl: number; // For simplicity, calculated P&L 
   notes: string;
+  account?: string;
 }
 
 export interface JournalEntry {
