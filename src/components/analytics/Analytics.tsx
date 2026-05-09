@@ -7,7 +7,7 @@ export function Analytics() {
   const { trades } = useTrades();
 
   if (trades.length === 0) {
-    return <div className="text-slate-400">Not enough data to run analytics. Add some trades first.</div>;
+    return <div className="text-slate-600 dark:text-slate-400">Not enough data to run analytics. Add some trades first.</div>;
   }
 
   // Equity Curve Data
@@ -56,10 +56,10 @@ export function Analytics() {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl text-sm">
-          <p className="font-semibold text-slate-200">{label}</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-3 rounded-lg shadow-xl text-sm">
+          <p className="font-semibold text-slate-800 dark:text-slate-200">{label}</p>
           {payload.map((p: any, i: number) => (
-             <p key={i} className="text-slate-400">
+             <p key={i} className="text-slate-600 dark:text-slate-400">
                {p.name === 'equity' || p.name === 'pnl' ? formatCurrency(p.value) : p.value}
              </p>
           ))}
@@ -73,14 +73,14 @@ export function Analytics() {
     <div className="space-y-6">
       <header>
         <h2 className="text-3xl font-light tracking-tight">Analytics</h2>
-        <p className="text-slate-400 mt-1 text-sm">Deep dive into your performance metrics.</p>
+        <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm">Deep dive into your performance metrics.</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Equity Curve */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm lg:col-span-2">
-          <h3 className="text-lg font-semibold mb-6 text-slate-200">Equity Curve</h3>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm lg:col-span-2">
+          <h3 className="text-lg font-semibold mb-6 text-slate-800 dark:text-slate-200">Equity Curve</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={equityData} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
@@ -95,8 +95,8 @@ export function Analytics() {
         </div>
 
         {/* Win / Loss Dist */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
-          <h3 className="text-lg font-semibold mb-6 text-slate-200">Win / Loss Distribution</h3>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-6 text-slate-800 dark:text-slate-200">Win / Loss Distribution</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={wlData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
@@ -115,8 +115,8 @@ export function Analytics() {
         </div>
 
         {/* PnL by Day */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
-          <h3 className="text-lg font-semibold mb-6 text-slate-200">P&L by Day of Week</h3>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-6 text-slate-800 dark:text-slate-200">P&L by Day of Week</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dayData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
@@ -135,8 +135,8 @@ export function Analytics() {
         </div>
 
         {/* Long vs Short */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm lg:col-span-2">
-          <h3 className="text-lg font-semibold mb-6 text-slate-200">Long vs Short Performance</h3>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm lg:col-span-2">
+          <h3 className="text-lg font-semibold mb-6 text-slate-800 dark:text-slate-200">Long vs Short Performance</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dirData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>

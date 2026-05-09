@@ -85,7 +85,7 @@ export function TradeLog() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-light tracking-tight">Trade Log</h2>
-          <p className="text-slate-400 mt-1 text-sm">Track and manage your individual executions.</p>
+          <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm">Track and manage your individual executions.</p>
         </div>
         <div className="flex items-center gap-3">
           {trades.length > 0 && (
@@ -102,7 +102,7 @@ export function TradeLog() {
               }}
               className={cn(
                 "font-semibold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors text-sm",
-                confirmClear ? "bg-red-500 text-white" : "text-slate-400 hover:text-red-400"
+                confirmClear ? "bg-red-500 text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400 hover:text-red-400"
               )}
             >
               <Trash2 className="w-4 h-4" />
@@ -118,7 +118,7 @@ export function TradeLog() {
           />
           <button 
             onClick={() => fileInputRef.current?.click()}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors text-sm"
+            className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors text-sm"
           >
             <Upload className="w-4 h-4" />
             Import CSV
@@ -137,10 +137,10 @@ export function TradeLog() {
         <AddTradeForm onClose={() => setIsAdding(false)} onAdd={(t) => { addTrade(t); setIsAdding(false); toast.success('Trade added successfully'); }} />
       )}
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-widest">
+            <thead className="bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 text-xs uppercase tracking-widest">
               <tr>
                 <th className="px-6 py-4 font-medium">Date</th>
                 <th className="px-6 py-4 font-medium">Account</th>
@@ -161,9 +161,9 @@ export function TradeLog() {
                 </tr>
               ) : (
                 [...trades].reverse().map(trade => (
-                  <tr key={trade.id} className="hover:bg-slate-800/30 transition-colors group">
-                    <td className="px-6 py-4 font-mono text-slate-300">{trade.date}</td>
-                    <td className="px-6 py-4 font-semibold text-slate-400">{trade.account || 'Manual'}</td>
+                  <tr key={trade.id} className="hover:bg-slate-100 dark:bg-slate-800/30 transition-colors group">
+                    <td className="px-6 py-4 font-mono text-slate-700 dark:text-slate-300">{trade.date}</td>
+                    <td className="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">{trade.account || 'Manual'}</td>
                     <td className="px-6 py-4 font-semibold">{trade.symbol}</td>
                     <td className="px-6 py-4">
                       <span className={cn(
@@ -178,11 +178,11 @@ export function TradeLog() {
                     <td className="px-6 py-4 font-mono">{trade.contracts}</td>
                     <td className={cn(
                       "px-6 py-4 font-mono font-semibold",
-                      trade.pnl > 0 ? "text-green-400" : trade.pnl < 0 ? "text-red-400" : "text-slate-300"
+                      trade.pnl > 0 ? "text-green-400" : trade.pnl < 0 ? "text-red-400" : "text-slate-700 dark:text-slate-300"
                     )}>
                       {formatCurrency(trade.pnl)}
                     </td>
-                    <td className="px-6 py-4 text-slate-400 truncate max-w-xs">{trade.notes}</td>
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400 truncate max-w-xs">{trade.notes}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
@@ -264,32 +264,32 @@ function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trad
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm mb-6 animate-in slide-in-from-top-4 fade-in duration-200">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm mb-6 animate-in slide-in-from-top-4 fade-in duration-200">
       <h3 className="text-lg font-semibold mb-4">Add New Trade</h3>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Date</label>
           <input type="date" required value={date} onChange={e => setDate(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Account</label>
           <input type="text" placeholder="e.g. Robinhood, NinjaTrader" value={account} onChange={e => setAccount(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Symbol</label>
           <input type="text" required placeholder="e.g. NQ" value={symbol} onChange={e => setSymbol(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Direction</label>
           <select value={direction} onChange={e => setDirection(e.target.value as Direction)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500">
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500">
             <option>Long</option>
             <option>Short</option>
           </select>
@@ -298,32 +298,32 @@ function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trad
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Multiplier ($/pt)</label>
           <input type="number" step="any" required value={instrumentMultiplier} onChange={e => setInstrumentMultiplier(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Entry Price</label>
           <input type="number" step="any" required value={entryPrice} onChange={e => setEntryPrice(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Exit Price</label>
           <input type="number" step="any" required value={exitPrice} onChange={e => setExitPrice(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Contracts/Shares</label>
           <input type="number" required min="1" value={contracts} onChange={e => setContracts(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 font-mono" />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-cyan-400 font-bold">Calculated P&L</label>
           <div className={cn(
-            "bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm font-mono font-semibold flex items-center h-full",
-            pnl > 0 ? "text-green-400" : pnl < 0 ? "text-red-400" : "text-slate-400"
+            "bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm font-mono font-semibold flex items-center h-full",
+            pnl > 0 ? "text-green-400" : pnl < 0 ? "text-red-400" : "text-slate-600 dark:text-slate-400"
           )}>
             {pnl > 0 ? '+' : ''}{pnl}
           </div>
@@ -332,11 +332,11 @@ function AddTradeForm({ onClose, onAdd }: { onClose: () => void, onAdd: (t: Trad
         <div className="flex flex-col gap-1 lg:col-span-3">
           <label className="text-xs uppercase tracking-widest text-slate-500 font-medium">Notes</label>
           <input type="text" placeholder="Why did you take this trade?" value={notes} onChange={e => setNotes(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
         </div>
 
         <div className="md:col-span-2 lg:col-span-4 flex justify-end gap-3 mt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-slate-200">
+          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200">
             Cancel
           </button>
           <button type="submit" className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-2 rounded-xl text-sm transition-colors">

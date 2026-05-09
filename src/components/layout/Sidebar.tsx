@@ -1,4 +1,4 @@
-import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, Clock, ArrowLeft, Link2, Hexagon } from 'lucide-react';
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, Clock, ArrowLeft, Link2, TrendingUp } from 'lucide-react';
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
 
@@ -13,23 +13,23 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
   ] as const;
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen flex-shrink-0">
-      <div className="p-6 border-b border-slate-800/60">
+    <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-screen flex-shrink-0">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-800/60">
         <div 
           className="flex items-center gap-2 mb-6 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={onBack}
         >
-          <Hexagon className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
+          <TrendingUp className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
           <h1 className="text-2xl font-bold tracking-tight text-[#5b32f6]">
             TradeEdge
           </h1>
         </div>
         
         {/* Account Selector */}
-        <button className="w-full flex items-center justify-between bg-slate-950 border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-lg transition-colors">
+        <button className="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:border-slate-700 px-3 py-2 rounded-lg transition-colors">
           <div className="flex flex-col items-start gap-0.5">
              <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Trading Account</span>
-             <span className="text-sm font-semibold text-slate-200">Main Futures (NQ)</span>
+             <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">Main Futures (NQ)</span>
           </div>
           <ChevronDown className="w-4 h-4 text-slate-500" />
         </button>
@@ -43,8 +43,8 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
             className={cn(
               "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium",
               currentTab === item.id 
-                ? "bg-slate-800 text-[#5b32f6] shadow-xs border border-slate-700"
-                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent"
+                ? "bg-slate-100 dark:bg-slate-800 text-[#5b32f6] shadow-xs border border-slate-300 dark:border-slate-700"
+                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-800 hover:text-slate-800 dark:text-slate-200 border border-transparent"
             )}
           >
             <item.icon className={cn("w-5 h-5", currentTab === item.id ? "text-[#5b32f6]" : "text-slate-500")} />
@@ -61,11 +61,11 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
                <Clock className="w-4 h-4" />
                <span className="text-xs font-bold uppercase tracking-wider">Free Trial</span>
             </div>
-            <p className="text-sm font-semibold text-slate-200 mb-2">14 days remaining</p>
-            <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden mb-3">
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2">14 days remaining</p>
+            <div className="w-full bg-slate-50 dark:bg-slate-950 h-1.5 rounded-full overflow-hidden mb-3">
                <div className="bg-[#5b32f6] w-1/12 h-full rounded-full"></div>
             </div>
-            <p className="text-[10px] text-slate-400 leading-relaxed mb-3">
+            <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
               Upgrade to Pro for unlimited gigabytes of cloud storage & unlimited accounts.
             </p>
             <button className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-2 rounded-lg text-xs transition-colors">
@@ -74,12 +74,12 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
          </div>
       </div>
 
-      <div className="p-4 border-t border-slate-800 flex justify-between items-center">
+      <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
         <p className="text-xs text-slate-500 font-mono">v1.0.0-beta</p>
         {onBack && (
           <button 
             onClick={onBack}
-            className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            className="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 transition-colors"
             title="Back to website"
           >
             <ArrowLeft className="w-3 h-3" /> Back

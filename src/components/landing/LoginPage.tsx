@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Hexagon } from 'lucide-react';
+import { ArrowRight, TrendingUp } from 'lucide-react';
 
 export function LoginPage({ onEnter }: { onEnter: () => void }) {
   return (
@@ -8,7 +8,7 @@ export function LoginPage({ onEnter }: { onEnter: () => void }) {
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#5b32f6] to-cyan-400"></div>
         
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Hexagon className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
+          <TrendingUp className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
           <span className="text-2xl font-bold tracking-tight text-[#5b32f6]">
             TradeEdge
           </span>

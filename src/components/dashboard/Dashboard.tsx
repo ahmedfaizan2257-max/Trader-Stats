@@ -49,7 +49,7 @@ export function Dashboard() {
     <div className="space-y-6">
       <header>
         <h2 className="text-3xl font-light tracking-tight">Dashboard</h2>
-        <p className="text-slate-400 mt-1 text-sm">Welcome back. Here's your recent trading performance.</p>
+        <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm">Welcome back. Here's your recent trading performance.</p>
       </header>
 
       {/* Stats Bar */}
@@ -63,7 +63,7 @@ export function Dashboard() {
       </div>
 
       {/* Calendar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold tracking-tight">Monthly P&L - {format(latestDate, 'MMMM yyyy')}</h3>
         </div>
@@ -75,7 +75,7 @@ export function Dashboard() {
             </div>
           ))}
           {emptyDaysStart.map((_, i) => (
-            <div key={`empty-${i}`} className="min-h-[64px] sm:h-24 rounded-xl border border-slate-800/50 bg-slate-900/20" />
+            <div key={`empty-${i}`} className="min-h-[64px] sm:h-24 rounded-xl border border-slate-200 dark:border-slate-800/50 bg-white dark:bg-slate-900/20" />
           ))}
           
           {daysInMonth.map(day => {
@@ -83,7 +83,7 @@ export function Dashboard() {
             const dayTrades = trades.filter(t => isSameDay(new Date(t.date), day));
             const dayPnl = dayTrades.reduce((sum, t) => sum + t.pnl, 0);
             
-            let bgClass = "bg-slate-800/40 border-slate-800/40"; // No trades (grey)
+            let bgClass = "bg-slate-100 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800/40"; // No trades (grey)
             if (dayTrades.length > 0) {
               bgClass = dayPnl > 0 ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-red-500/10 border-red-500/30 text-red-400";
             }
@@ -115,7 +115,7 @@ export function Dashboard() {
 function StatCard({ label, value, highlight }: { label: string, value: string, highlight: 'good'|'bad'|'neutral' }) {
   const colorClass = highlight === 'good' ? 'text-green-400' : highlight === 'bad' ? 'text-red-400' : 'text-slate-100';
   return (
-    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col items-start shadow-sm">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl flex flex-col items-start shadow-sm">
       <span className="text-xs font-medium text-slate-500 uppercase tracking-widest">{label}</span>
       <span className={cn("text-2xl font-semibold mt-1 font-mono tracking-tight", colorClass)}>{value}</span>
     </div>

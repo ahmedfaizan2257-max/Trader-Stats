@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, Brain, Calendar, CheckCircle2, ChevronRight, LineChart, Shield, Zap, Star, Menu, Twitter, BookOpen, Hexagon, Check, Play, ChevronDown, Sun, Moon } from 'lucide-react';
+import { ArrowRight, BarChart3, Brain, Calendar, CheckCircle2, ChevronRight, LineChart, Shield, Zap, Star, Menu, Twitter, BookOpen, TrendingUp, Check, Play, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { PlatformsPage } from './PlatformsPage';
@@ -31,7 +31,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
       <nav className="fixed top-0 w-full z-50 bg-white dark:bg-[#000000] border-b border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('home')}>
-            <Hexagon className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
+            <TrendingUp className="w-7 h-7 text-[#5b32f6]" strokeWidth={2.5} />
             <span className="text-2xl font-bold tracking-tight text-[#5b32f6]">
               TradeEdge
             </span>
@@ -90,7 +90,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <Hexagon className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
+              <TrendingUp className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
               <span className="text-xl font-bold tracking-tight text-[#5b32f6]">
                 TradeEdge
               </span>
@@ -244,7 +244,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
             {[...Array(2)].map((_, groupIdx) => (
               <div key={groupIdx} className="flex items-center gap-32 shrink-0 pr-32">
                 <div className="flex items-center gap-2 transition-all hover:opacity-80 cursor-default">
-                  <div className="text-[#3b82f6]"><Hexagon className="fill-current w-8 h-8" /></div>
+                  <div className="text-[#3b82f6]"><TrendingUp className="fill-current w-8 h-8" /></div>
                   <span className="text-slate-900 dark:text-white font-bold text-2xl tracking-tight">tradovate</span>
                 </div>
                 <div className="flex items-center gap-2 transition-all hover:opacity-80 cursor-default">

@@ -9,7 +9,7 @@ import { Analytics } from './components/analytics/Analytics';
 import { Integrations } from './components/integrations/Integrations';
 import { LandingPage } from './components/landing/LandingPage';
 import { Tab } from './types';
-import { Menu, X, Hexagon } from 'lucide-react';
+import { Menu, X, TrendingUp } from 'lucide-react';
 import { ThemeProvider } from './components/ThemeProvider';
 
 import { Toaster } from 'sonner';
@@ -52,7 +52,7 @@ export default function App() {
         <main className="flex-1 overflow-y-auto bg-slate-100 dark:bg-[#0a0f18] p-4 md:p-8 relative">
           <div className="md:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => setAppMode('landing')}>
-              <Hexagon className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
+              <TrendingUp className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
               <h1 className="text-xl font-bold tracking-tight text-[#5b32f6]">
                 TradeEdge
               </h1>

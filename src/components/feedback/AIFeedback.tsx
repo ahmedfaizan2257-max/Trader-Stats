@@ -78,16 +78,16 @@ Keep it concise, professional, and actionable. Do not output anything outside of
           <Sparkles className="w-8 h-8 text-cyan-400" />
           AI Trading Coach
         </h2>
-        <p className="text-slate-400 mt-1 text-sm">Get personalized insights based on your actual execution data.</p>
+        <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm">Get personalized insights based on your actual execution data.</p>
       </header>
 
       {!feedback && !isLoading && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center shadow-sm">
           <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mb-4">
             <Sparkles className="w-8 h-8 text-cyan-400" />
           </div>
           <h3 className="text-xl font-semibold mb-2">Analyzing {trades.length} trades</h3>
-          <p className="text-slate-400 max-w-md mx-auto mb-6 text-sm">
+          <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-6 text-sm">
             Our AI model will review your entries, exits, sizing, and P&L to uncover hidden patterns in your trading behavior.
           </p>
           <button 
@@ -106,7 +106,7 @@ Keep it concise, professional, and actionable. Do not output anything outside of
       )}
 
       {isLoading && (
-         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center flex flex-col items-center shadow-sm">
+         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center flex flex-col items-center shadow-sm">
             <Loader2 className="w-10 h-10 text-cyan-400 animate-spin mb-4" />
             <h3 className="text-lg font-semibold animate-pulse">Running advanced pattern analysis...</h3>
             <p className="text-slate-500 text-sm mt-2">Correlating entries, evaluating sizing logic, and finding leaks.</p>
@@ -117,12 +117,12 @@ Keep it concise, professional, and actionable. Do not output anything outside of
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col items-start">
           <button 
             onClick={getFeedback}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2 rounded-xl text-sm transition-colors flex items-center gap-2"
+            className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-4 py-2 rounded-xl text-sm transition-colors flex items-center gap-2"
           >
             <Sparkles className="w-4 h-4" />
             Regenerate Analysis
           </button>
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 prose prose-invert prose-p:text-slate-300 prose-headings:text-cyan-400 prose-headings:mt-6 prose-headings:mb-2 prose-headings:text-lg prose-headings:font-semibold max-w-none prose-li:text-slate-300 shadow-sm custom-markdown prose-strong:text-slate-100">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 prose prose-invert prose-p:text-slate-700 dark:text-slate-300 prose-headings:text-cyan-400 prose-headings:mt-6 prose-headings:mb-2 prose-headings:text-lg prose-headings:font-semibold max-w-none prose-li:text-slate-700 dark:text-slate-300 shadow-sm custom-markdown prose-strong:text-slate-100">
             <Markdown>{feedback}</Markdown>
           </div>
         </div>

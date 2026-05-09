@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, Brain, Hexagon } from 'lucide-react';
+import { BarChart3, Brain, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export function DashboardMock({ variant = 'hero' }: { variant?: 'hero' | 'performance' | 'chart' | 'journal' | 'feedback' }) {
@@ -18,7 +18,7 @@ export function DashboardMock({ variant = 'hero' }: { variant?: 'hero' | 'perfor
         {/* Sidebar */}
         <div className="hidden sm:block w-48 border-r border-[#26262a] bg-[#111113] p-4 space-y-4">
           <div className="flex items-center gap-2 mb-6">
-            <Hexagon className="w-5 h-5 text-[#5b32f6]" strokeWidth={2.5} />
+            <TrendingUp className="w-5 h-5 text-[#5b32f6]" strokeWidth={2.5} />
             <span className="text-[#5b32f6] font-bold text-sm tracking-tight">TradeEdge</span>
           </div>
           {[1,2,3,4,5,6,7,8].map(i => (

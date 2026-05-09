@@ -145,18 +145,18 @@ export function Integrations() {
             Broker Integrations
             <span className="bg-[#5b32f6]/10 text-[#5b32f6] text-xs px-2 py-1 rounded-md font-bold uppercase tracking-wider">Beta</span>
           </h2>
-          <p className="text-slate-400 mt-1 text-sm">Connect your brokerages using Secure Login (OAuth) or API Keys to auto-sync trades.</p>
+          <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm">Connect your brokerages using Secure Login (OAuth) or API Keys to auto-sync trades.</p>
         </div>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6">
         <div className="flex items-start gap-4 mb-8">
           <div className="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
             <Shield className="w-6 h-6 text-emerald-400" />
           </div>
           <div>
-            <h3 className="font-semibold text-lg text-slate-200">How do broker integrations work?</h3>
-            <p className="text-slate-400 text-sm mt-1 mb-4 leading-relaxed max-w-2xl">
+            <h3 className="font-semibold text-lg text-slate-800 dark:text-slate-200">How do broker integrations work?</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-1 mb-4 leading-relaxed max-w-2xl">
               We connect directly to your exchange either via <strong>Secure Login (OAuth)</strong> or <strong>Read-Only API Keys</strong>. These methods allow our system to securely sync your trade history, but mathematically prevent us from placing trades or withdrawing funds.
             </p>
           </div>
@@ -169,7 +169,7 @@ export function Integrations() {
             placeholder="Search platforms..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#5b32f6] transition-colors"
+            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#5b32f6] transition-colors"
           />
         </div>
 
@@ -186,8 +186,8 @@ export function Integrations() {
                   }
                 }}
                 className={cn(
-                  "bg-slate-950 border p-5 rounded-xl flex items-center justify-between transition-colors group",
-                  platform.status === 'available' && !isConnected ? "border-slate-800 hover:border-slate-600 cursor-pointer" : "border-slate-800",
+                  "bg-slate-50 dark:bg-slate-950 border p-5 rounded-xl flex items-center justify-between transition-colors group",
+                  platform.status === 'available' && !isConnected ? "border-slate-200 dark:border-slate-800 hover:border-slate-600 cursor-pointer" : "border-slate-200 dark:border-slate-800",
                   isConnected && "border-emerald-500/30 bg-emerald-500/5"
                 )}
               >
@@ -196,12 +196,12 @@ export function Integrations() {
                     "w-10 h-10 rounded-lg flex items-center justify-center font-bold border transition-colors",
                     isConnected 
                       ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" 
-                      : "bg-slate-900 text-slate-300 border-slate-800 group-hover:border-slate-600"
+                      : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 group-hover:border-slate-600"
                   )}>
                     {platform.icon}
                   </div>
                   <div>
-                    <h4 className="font-medium text-slate-200">{platform.name}</h4>
+                    <h4 className="font-medium text-slate-800 dark:text-slate-200">{platform.name}</h4>
                     <p className="text-xs text-slate-500">
                       {isConnected 
                         ? <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3 h-3"/> Connected</span>
@@ -215,7 +215,7 @@ export function Integrations() {
                     onClick={(e) => handleDisconnect(e, platform.id)}
                     className={cn(
                       "text-xs transition-colors px-2 py-1 rounded",
-                      platformToDisconnect === platform.id ? "bg-red-500 text-white" : "text-slate-500 hover:text-red-400"
+                      platformToDisconnect === platform.id ? "bg-red-500 text-slate-900 dark:text-white" : "text-slate-500 hover:text-red-400"
                     )}
                   >
                     {platformToDisconnect === platform.id ? "Confirm" : "Disconnect"}
@@ -225,7 +225,7 @@ export function Integrations() {
                     "p-2 rounded-lg transition-colors border",
                     platform.status === 'available' 
                       ? "bg-[#5b32f6]/10 text-[#5b32f6] border-[#5b32f6]/20 group-hover:bg-[#5b32f6] group-hover:text-white"
-                      : "bg-slate-900 text-slate-600 border-slate-800 cursor-not-allowed"
+                      : "bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 cursor-not-allowed"
                   )}>
                     <Link2 className="w-4 h-4" />
                   </button>
@@ -238,37 +238,37 @@ export function Integrations() {
 
       {/* Connection Modal */}
       {selectedPlatform && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md shadow-2xl relative">
             <button 
               onClick={() => setSelectedPlatform(null)}
-              className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-300 rounded-lg hover:bg-slate-800 transition-colors"
+              className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:bg-slate-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
             
-            <div className="p-6 border-b border-slate-800">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-slate-950 flex items-center justify-center font-bold text-[#5b32f6] border border-slate-800">
+                <div className="w-10 h-10 rounded-lg bg-slate-50 dark:bg-slate-950 flex items-center justify-center font-bold text-[#5b32f6] border border-slate-200 dark:border-slate-800">
                   {selectedPlatform.icon}
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-100">Connect {selectedPlatform.name}</h3>
-                  <p className="text-sm text-slate-400">Securely sync your trading data</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Securely sync your trading data</p>
                 </div>
               </div>
               
               {selectedPlatform.authType === 'both' && (
-                <div className="flex mt-4 bg-slate-950 p-1 rounded-lg border border-slate-800">
+                <div className="flex mt-4 bg-slate-50 dark:bg-slate-950 p-1 rounded-lg border border-slate-200 dark:border-slate-800">
                   <button 
                     onClick={() => setAuthMethod('oauth')}
-                    className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'oauth' ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-200")}
+                    className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'oauth' ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200")}
                   >
                     Login (Recommended)
                   </button>
                   <button 
                     onClick={() => setAuthMethod('api')}
-                    className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'api' ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-200")}
+                    className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'api' ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200")}
                   >
                     API Keys
                   </button>
@@ -279,8 +279,8 @@ export function Integrations() {
             {currentMethod === 'oauth' ? (
               <div className="p-6 flex flex-col items-center justify-center text-center">
                 <Shield className="w-12 h-12 text-emerald-400 mb-4 opacity-80" />
-                <h4 className="text-lg font-medium text-slate-200 mb-2">Secure Broker Login</h4>
-                <p className="text-sm text-slate-400 mb-8 max-w-[280px]">
+                <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">Secure Broker Login</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-8 max-w-[280px]">
                   You will be securely redirected to {selectedPlatform.name} to approve read-only access.
                 </p>
                 
@@ -302,15 +302,15 @@ export function Integrations() {
             ) : (
               <form onSubmit={handleConnect} className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Environment</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Environment</label>
                   <div className="grid grid-cols-2 gap-2">
                     <button type="button" className="bg-[#5b32f6]/10 text-[#5b32f6] border border-[#5b32f6]/30 py-2 rounded-lg text-sm font-medium">Live</button>
-                    <button type="button" className="bg-slate-950 text-slate-500 border border-slate-800 py-2 rounded-lg text-sm font-medium hover:border-slate-700">Demo / Simulation</button>
+                    <button type="button" className="bg-slate-50 dark:bg-slate-950 text-slate-500 border border-slate-200 dark:border-slate-800 py-2 rounded-lg text-sm font-medium hover:border-slate-300 dark:border-slate-700">Demo / Simulation</button>
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">API Key</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">API Key</label>
                   <input 
                     type="text" 
                     autoFocus
@@ -318,25 +318,25 @@ export function Integrations() {
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder={`Your ${selectedPlatform.name} API Key`}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#5b32f6] transition-colors"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#5b32f6] transition-colors"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">API Secret</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">API Secret</label>
                   <input 
                     type="password" 
                     required
                     value={apiSecret}
                     onChange={(e) => setApiSecret(e.target.value)}
                     placeholder="Your API Secret"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#5b32f6] transition-colors"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#5b32f6] transition-colors"
                   />
                 </div>
                 
-                <div className="bg-slate-950/50 rounded-lg p-3 border border-slate-800/50 flex items-start gap-2 mt-4">
+                <div className="bg-slate-50 dark:bg-slate-950/50 rounded-lg p-3 border border-slate-200 dark:border-slate-800/50 flex items-start gap-2 mt-4">
                   <Shield className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
                     Your API keys are encrypted locally before being transmitted and are never stored in plain text.
                   </p>
                 </div>
