@@ -1,23 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TradeProvider } from './context/TradeContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Dashboard } from './components/dashboard/Dashboard';
+import { Calendar } from './components/calendar/Calendar';
 import { TradeLog } from './components/tradelog/TradeLog';
 import { AIFeedback } from './components/feedback/AIFeedback';
 import { Journal } from './components/journal/Journal';
 import { Analytics } from './components/analytics/Analytics';
 import { Integrations } from './components/integrations/Integrations';
+import { Goals } from './components/goals/Goals';
+import { Accounts } from './components/accounts/Accounts';
+import { Payouts } from './components/payouts/Payouts';
+import { Customizer } from './components/customizer/Customizer';
+import { Sharing } from './components/sharing/Sharing';
+import { StudentDashboard } from './components/studentDashboard/StudentDashboard';
+import { Settings } from './components/settings/Settings';
 import { LandingPage } from './components/landing/LandingPage';
 import { Tab } from './types';
 import { Menu, X, TrendingUp } from 'lucide-react';
 import { ThemeProvider } from './components/ThemeProvider';
-
+import { useAuth } from './context/AuthContext';
 import { Toaster } from 'sonner';
 
 export default function App() {
+  const { user } = useAuth();
   const [appMode, setAppMode] = useState<'landing' | 'app'>('landing');
   const [currentTab, setCurrentTab] = useState<Tab>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setAppMode('app');
+    }
+  }, [user]);
 
   if (appMode === 'landing') {
     return (
@@ -63,12 +78,26 @@ export default function App() {
           </div>
           
           <div className="max-w-7xl mx-auto pb-24">
+            <div className="w-full flex items-center justify-center gap-2 mb-8 text-sm text-slate-600 dark:text-slate-300">
+               <span className="text-lg">🏳️</span> 
+               <span>14 days left in your trial</span>
+               <button className="text-emerald-500 hover:text-emerald-400 font-bold uppercase tracking-wide transition-colors">Upgrade Now</button>
+            </div>
+            
             {currentTab === 'dashboard' && <Dashboard />}
             {currentTab === 'log' && <TradeLog />}
+            {currentTab === 'goals' && <Goals />}
+            {currentTab === 'calendar' && <Calendar />}
             {currentTab === 'feedback' && <AIFeedback />}
             {currentTab === 'journal' && <Journal />}
             {currentTab === 'analytics' && <Analytics />}
             {currentTab === 'integrations' && <Integrations />}
+            {currentTab === 'accounts' && <Accounts />}
+            {currentTab === 'payouts' && <Payouts />}
+            {currentTab === 'customizer' && <Customizer />}
+            {currentTab === 'sharing' && <Sharing />}
+            {currentTab === 'student-dashboard' && <StudentDashboard />}
+            {currentTab === 'settings' && <Settings />}
           </div>
         </main>
       </div>

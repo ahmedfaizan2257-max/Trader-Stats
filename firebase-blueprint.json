@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "Trade": {
+      "title": "Trade",
+      "description": "A single trade record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "symbol": { "type": "string" },
+        "direction": { "type": "string" },
+        "entryPrice": { "type": "number" },
+        "exitPrice": { "type": "number" },
+        "contracts": { "type": "number" },
+        "pnl": { "type": "number" },
+        "setup": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "date", "symbol", "direction", "entryPrice", "exitPrice", "contracts", "pnl", "setup", "notes"]
+    },
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "description": "A daily journal entry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "notes": { "type": "string" },
+        "emotion": { "type": "string" },
+        "followedPlan": { "type": "string" }
+      },
+      "required": ["id", "date", "notes", "emotion", "followedPlan"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/trades/{tradeId}": {
+      "schema": { "$ref": "#/entities/Trade" },
+      "description": "The trades belonging to a user."
+    },
+    "/users/{userId}/journal/{journalId}": {
+      "schema": { "$ref": "#/entities/JournalEntry" },
+      "description": "The journal entries belonging to a user."
+    }
+  }
+}

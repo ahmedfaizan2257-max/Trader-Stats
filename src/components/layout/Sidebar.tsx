@@ -1,15 +1,20 @@
-import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, Clock, ArrowLeft, Link2, TrendingUp } from 'lucide-react';
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share } from 'lucide-react';
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
 
 export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, onTabSelect: (val: Tab) => void, onBack?: () => void }) {
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'log', label: 'Trade Log', icon: Briefcase },
-    { id: 'feedback', label: 'AI Feedback', icon: MessageSquare },
-    { id: 'journal', label: 'Journal', icon: BookOpen },
-    { id: 'analytics', label: 'Analytics', icon: LineChart },
-    { id: 'integrations', label: 'Integrations', icon: Link2 },
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
+    { id: 'goals', label: 'Goals', icon: Target },
+    { id: 'accounts', label: 'Accounts', icon: Wallet },
+    { id: 'journal', label: 'Journal', icon: SquarePen },
+    { id: 'payouts', label: 'Payouts', icon: DollarSign },
+    { id: 'customizer', label: 'Customizer', icon: Zap },
+    { id: 'sharing', label: 'Sharing', icon: Share },
+    { id: 'log', label: 'Trade Log', icon: ClipboardList },
+    { id: 'student-dashboard', label: 'Student Dashboard', icon: GraduationCap },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ] as const;
 
   return (
@@ -41,14 +46,17 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
             key={item.id}
             onClick={() => onTabSelect(item.id)}
             className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium",
+              "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium",
               currentTab === item.id 
                 ? "bg-slate-100 dark:bg-slate-800 text-[#5b32f6] shadow-xs border border-slate-300 dark:border-slate-700"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-800 hover:text-slate-800 dark:text-slate-200 border border-transparent"
             )}
           >
-            <item.icon className={cn("w-5 h-5", currentTab === item.id ? "text-[#5b32f6]" : "text-slate-500")} />
-            {item.label}
+            <div className="flex items-center gap-3">
+              <item.icon className={cn("w-5 h-5", currentTab === item.id ? "text-[#5b32f6]" : "text-slate-500")} />
+              {item.label}
+            </div>
+            {item.id === 'settings' && <ChevronRight className="w-4 h-4" />}
           </button>
         ))}
       </nav>
