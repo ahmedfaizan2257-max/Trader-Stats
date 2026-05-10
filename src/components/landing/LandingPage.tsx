@@ -7,11 +7,13 @@ import { BlogPage } from './BlogPage';
 import { LoginPage } from './LoginPage';
 import { DashboardMock } from './DashboardMock';
 import { useTheme } from '../ThemeProvider';
+import { useAuth } from '../../context/AuthContext';
 
 export function LandingPage({ onEnter }: { onEnter: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState<'home' | 'platforms' | 'leaderboard' | 'blog' | 'login'>('home');
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
 
   const handleNav = (page: 'home' | 'platforms' | 'leaderboard' | 'blog' | 'login', sectionId?: string) => {
     setActivePage(page);
@@ -22,6 +24,14 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
       }, 100);
     } else {
       window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  };
+
+  const handleEnter = () => {
+    if (user) {
+      onEnter();
+    } else {
+      handleNav('login');
     }
   };
 
@@ -43,12 +53,16 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
             <button onClick={() => handleNav('home', 'pricing')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">PRICING</button>
             <button onClick={() => handleNav('platforms')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">DIRECTORIES</button>
             <button onClick={() => handleNav('blog')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">COMPANY</button>
-            <button onClick={() => handleNav('login')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">LOGIN</button>
+            {user ? (
+              <button onClick={onEnter} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">DASHBOARD</button>
+            ) : (
+              <button onClick={() => handleNav('login')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">LOGIN</button>
+            )}
             <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 hidden lg:block"></div>
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <button onClick={onEnter} className="bg-[#5b32f6] hover:bg-[#4a26d7] text-white px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-widest transition-colors ml-2">
+            <button onClick={() => handleNav('login', 'signup')} className="bg-[#5b32f6] hover:bg-[#4a26d7] text-white px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-widest transition-colors ml-2">
               START IMPROVING
             </button>
           </div>
@@ -78,7 +92,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
 
       {/* Pages Router component */}
       <div className="flex-1">
-        {activePage === 'home' && <HomeContent onEnter={onEnter} />}
+        {activePage === 'home' && <HomeContent onEnter={handleEnter} />}
         {activePage === 'platforms' && <PlatformsPage />}
         {activePage === 'leaderboard' && <LeaderboardPage />}
         {activePage === 'blog' && <BlogPage />}

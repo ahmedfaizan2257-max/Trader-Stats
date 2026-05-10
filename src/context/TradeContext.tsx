@@ -47,7 +47,13 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setTrades([]);
+      setJournalEntries([]);
+      setGoals([]);
+      setAccounts([]);
+      return;
+    }
     
     const unsubscribeTrades = onSnapshot(collection(db, 'users', user.uid, 'trades'), (snapshot) => {
        const userTrades = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Trade));

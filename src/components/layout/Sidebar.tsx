@@ -2,7 +2,11 @@ import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, Chevron
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
 
+import { useAuth } from '../../context/AuthContext';
+import { LogOut } from 'lucide-react';
+
 export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, onTabSelect: (val: Tab) => void, onBack?: () => void }) {
+  const { logout } = useAuth();
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
     { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
@@ -82,17 +86,31 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
          </div>
       </div>
 
-      <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
-        <p className="text-xs text-slate-500 font-mono">v1.0.0-beta</p>
-        {onBack && (
-          <button 
-            onClick={onBack}
-            className="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 transition-colors"
-            title="Back to website"
-          >
-            <ArrowLeft className="w-3 h-3" /> Back
-          </button>
-        )}
+      <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
+        <button 
+          onClick={async () => {
+             try {
+               await logout();
+               if (onBack) onBack();
+             } catch (error) {
+               console.error("Logout error", error);
+             }
+          }}
+          className="flex items-center justify-center gap-2 w-full py-2 bg-slate-100 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-900/40 text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 rounded-lg text-sm font-semibold transition-colors"
+        >
+          <LogOut className="w-4 h-4" /> Sign Out
+        </button>
+        <div className="flex justify-between items-center px-1">
+          <p className="text-[10px] text-slate-500 font-mono">v1.0.0-beta</p>
+          {onBack && (
+            <button 
+              onClick={onBack}
+              className="flex items-center gap-1 text-[10px] text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 transition-colors"
+            >
+              <ArrowLeft className="w-3 h-3" /> Home
+            </button>
+          )}
+        </div>
       </div>
     </aside>
   );

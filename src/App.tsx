@@ -23,21 +23,28 @@ import { useAuth } from './context/AuthContext';
 import { Toaster } from 'sonner';
 
 export default function App() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [appMode, setAppMode] = useState<'landing' | 'app'>('landing');
   const [currentTab, setCurrentTab] = useState<Tab>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
     if (user) {
       setAppMode('app');
+    } else {
+      setAppMode('landing');
     }
-  }, [user]);
+  }, [user, loading]);
 
-  if (appMode === 'landing') {
+  if (loading) {
+     return <div className="min-h-screen bg-[#000000] flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-[#5b32f6] border-t-transparent animate-spin"></div></div>;
+  }
+
+  if (appMode === 'landing' || !user) {
     return (
       <ThemeProvider defaultTheme="dark">
-        <LandingPage onEnter={() => setAppMode('app')} />
+        <LandingPage onEnter={() => { if (user) setAppMode('app') }} />
       </ThemeProvider>
     );
   }
