@@ -16,6 +16,9 @@ import { Sharing } from './components/sharing/Sharing';
 import { StudentDashboard } from './components/studentDashboard/StudentDashboard';
 import { Settings } from './components/settings/Settings';
 import { LandingPage } from './components/landing/LandingPage';
+import { LoginPage } from './components/auth/LoginPage';
+import { PaymentPage } from './components/auth/PaymentPage';
+import { MockOAuthPage } from './components/integrations/MockOAuthPage';
 import { Tab } from './types';
 import { Menu, X, TrendingUp } from 'lucide-react';
 import { ThemeProvider } from './components/ThemeProvider';
@@ -24,27 +27,93 @@ import { Toaster } from 'sonner';
 
 export default function App() {
   const { user, loading } = useAuth();
-  const [appMode, setAppMode] = useState<'landing' | 'app'>('landing');
+  const [appMode, setAppMode] = useState<'landing' | 'app' | 'login'>('landing');
   const [currentTab, setCurrentTab] = useState<Tab>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mockOAuthPlatform, setMockOAuthPlatform] = useState<string | null>(null);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const platform = urlParams.get('mock_oauth');
+    if (platform) {
+      setMockOAuthPlatform(platform);
+    }
+    if (urlParams.get('oauth_callback')) {
+      setCurrentTab('integrations');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      const paidStr = localStorage.getItem(`hasPaid_${user.uid}`);
+      if (paidStr === 'true') {
+        setHasPaid(true);
+      } else {
+        setHasPaid(false);
+      }
+    }
+  }, [user]);
+
+  const handleOAuthComplete = (code: string) => {
+    // Redirect back to app with code
+    window.location.href = `/?oauth_callback=${mockOAuthPlatform}&code=${code}`;
+  };
+
+  const handleOAuthCancel = () => {
+    window.location.href = `/`;
+  };
 
   useEffect(() => {
     if (loading) return;
     if (user) {
+      // Check trial
+      const creationTime = user.metadata.creationTime ? new Date(user.metadata.creationTime) : new Date();
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - creationTime.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // If we are currently handling a signup, we don't automatically go into app
+      if (appMode === 'login' && sessionStorage.getItem('isSigningUp') === 'true') {
+          return; // Stay on login screen to show "successfully signed up"
+      }
+      
       setAppMode('app');
-    } else {
-      setAppMode('landing');
+      
+      if (diffDays > 14 && !hasPaid) {
+         setShowPayment(true);
+      } else {
+         setShowPayment(false);
+      }
     }
-  }, [user, loading]);
+  }, [user, loading, appMode, hasPaid]);
+
+  if (mockOAuthPlatform) {
+    return (
+      <ThemeProvider defaultTheme="dark">
+        <Toaster theme="dark" position="top-right" />
+        <MockOAuthPage platform={mockOAuthPlatform} onComplete={handleOAuthComplete} onCancel={handleOAuthCancel} />
+      </ThemeProvider>
+    );
+  }
 
   if (loading) {
      return <div className="min-h-screen bg-[#000000] flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-[#5b32f6] border-t-transparent animate-spin"></div></div>;
   }
 
+  if (appMode === 'login' && !user) {
+    return (
+      <ThemeProvider defaultTheme="dark">
+        <Toaster theme="dark" position="top-right" />
+        <LoginPage onBack={() => setAppMode('landing')} />
+      </ThemeProvider>
+    );
+  }
+
   if (appMode === 'landing' || !user) {
     return (
       <ThemeProvider defaultTheme="dark">
-        <LandingPage onEnter={() => { if (user) setAppMode('app') }} />
+        <LandingPage onEnter={() => { if (user) setAppMode('app'); else setAppMode('login'); }} />
       </ThemeProvider>
     );
   }
@@ -85,12 +154,22 @@ export default function App() {
           </div>
           
           <div className="max-w-7xl mx-auto pb-24">
-            <div className="w-full flex items-center justify-center gap-2 mb-8 text-sm text-slate-600 dark:text-slate-300">
-               <span className="text-lg">🏳️</span> 
-               <span>14 days left in your trial</span>
-               <button className="text-emerald-500 hover:text-emerald-400 font-bold uppercase tracking-wide transition-colors">Upgrade Now</button>
-            </div>
+            {!hasPaid && user && (
+              <div className="w-full flex items-center justify-center gap-2 mb-8 text-sm text-slate-600 dark:text-slate-300">
+                 <span className="text-lg">🏳️</span> 
+                 You have {Math.max(0, 14 - Math.floor((new Date().getTime() - new Date(user.metadata.creationTime || new Date()).getTime()) / (1000 * 60 * 60 * 24)))} days left of your free trial
+                 <button onClick={() => setShowPayment(true)} className="text-emerald-500 hover:text-emerald-400 font-bold uppercase tracking-wide transition-colors">Subscribe Now</button>
+              </div>
+            )}
             
+            {showPayment && (
+              <PaymentPage onPay={() => {
+                localStorage.setItem(`hasPaid_${user?.uid}`, 'true');
+                setHasPaid(true);
+                setShowPayment(false);
+              }} />
+            )}
+
             {currentTab === 'dashboard' && <Dashboard />}
             {currentTab === 'log' && <TradeLog />}
             {currentTab === 'goals' && <Goals />}

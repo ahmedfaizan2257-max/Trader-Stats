@@ -83,6 +83,79 @@ async function startServer() {
     }
   });
 
+  // Tradovate OAuth exchange endpoint
+  app.post('/api/auth/tradovate/callback', async (req, res) => {
+    const { code, redirectUri } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({ error: 'Missing OAuth code' });
+    }
+
+    const clientId = process.env.VITE_TRADOVATE_CLIENT_ID;
+    const clientSecret = process.env.TRADOVATE_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+      return res.status(500).json({ 
+        error: 'Missing VITE_TRADOVATE_CLIENT_ID or TRADOVATE_CLIENT_SECRET in .env file on the server. Please add them to connect live.' 
+      });
+    }
+
+    try {
+      // 1. Exchange code for an Access Token securely via server-to-server request
+      const tokenResponse = await fetch('https://live.tradovate.com/v1/oauth/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          grant_type: 'authorization_code',
+          code,
+          client_id: clientId,
+          client_secret: clientSecret,
+          redirect_uri: redirectUri
+        }).toString()
+      });
+
+      if (!tokenResponse.ok) {
+         const errData = await tokenResponse.json();
+         throw new Error(`Tradovate API Error: ${errData.error_description || errData.error || tokenResponse.statusText}`);
+      }
+
+      const tokenData = await tokenResponse.json();
+      const accessToken = tokenData.access_token;
+      
+      // 2. We now have the access token! In a real application, you'd store it in Firebase for this user.
+      // 3. Optional: Automatically pull recent trades immediately using the access token.
+      
+      const accountsResponse = await fetch('https://live.tradovate.com/v1/account/list', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      
+      if (!accountsResponse.ok) {
+        // If it fails to fetch accounts, still return success for OAuth, but no trades pulled
+        return res.json({ token: accessToken, trades: [] });
+      }
+      
+      // Example fetching code (needs adaptation based on what tradovate requires)
+      /* 
+      const accounts = await accountsResponse.json();
+      const accountId = accounts[0]?.id; // taking the first account for demo
+
+      const positionsResp = await fetch(`https://live.tradovate.com/v1/position/list?accountId=${accountId}`, { ... });
+      ... map trades ...
+      */
+
+      // Currently return a placeholder to signal success until real trade pulling logic is finalized
+      res.json({ token: accessToken, trades: [] });
+
+    } catch (err: any) {
+      console.error('Tradovate OAuth error:', err);
+      res.status(500).json({ error: err.message || 'Failed to authorize with Tradovate' });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

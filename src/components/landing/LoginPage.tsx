@@ -1,15 +1,44 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from 'sonner';
 
 export function LoginPage({ onEnter }: { onEnter: () => void }) {
-  const { signInWithGoogle, signInWithMicrosoft, signInWithApple, user } = useAuth();
+  const { signInWithGoogle, signInWithMicrosoft, signInWithApple, signInWithEmail, signUpWithEmail, user } = useAuth();
+  
+  const [isSignUp, setIsSignUp] = useState(window.location.hash.includes('signup'));
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     if (user) {
-      onEnter();
+      if (!user.emailVerified && user.providerData.some(p => p.providerId === 'password')) {
+        // Needs verification if signed up with email
+        toast.error('Please verify your email address to continue.');
+      } else {
+        onEnter();
+      }
     }
   }, [user, onEnter]);
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    setProcessing(true);
+    try {
+      if (isSignUp) {
+        await signUpWithEmail(email, password);
+        toast.success('Check your email for a verification link!');
+      } else {
+        await signInWithEmail(email, password);
+      }
+    } catch (err: any) {
+      toast.error(err.message || 'Authentication failed');
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   return (
     <div className="pt-32 pb-20 px-6 flex items-center justify-center min-h-[80vh]">
@@ -24,8 +53,49 @@ export function LoginPage({ onEnter }: { onEnter: () => void }) {
         </div>
 
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome</h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">Sign in to access your dashboard.</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{isSignUp ? 'Create an Account' : 'Welcome Back'}</h2>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">
+            {isSignUp ? 'Sign up to get started with your dashboard.' : 'Sign in to access your dashboard.'}
+          </p>
+        </div>
+
+        <form onSubmit={handleEmailAuth} className="space-y-4 mb-8">
+          <div>
+            <input 
+              type="email" 
+              placeholder="Email Address" 
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="w-full bg-white dark:bg-[#18181b] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#5b32f6]"
+              required
+            />
+          </div>
+          <div>
+            <input 
+              type="password" 
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="w-full bg-white dark:bg-[#18181b] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#5b32f6]"
+              required
+            />
+          </div>
+          <button 
+            type="submit" 
+            disabled={processing}
+            className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+          >
+            {processing ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+          </button>
+        </form>
+
+        <div className="relative mb-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-slate-50 dark:bg-[#09090b] text-slate-500">Or continue with</span>
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -66,6 +136,24 @@ export function LoginPage({ onEnter }: { onEnter: () => void }) {
             </svg>
             Continue with Apple
           </button>
+        </div>
+        
+        <div className="mt-8 text-center text-sm text-slate-500">
+          {isSignUp ? (
+            <>
+              Already have an account?{' '}
+              <button onClick={() => setIsSignUp(false)} className="text-[#5b32f6] font-bold hover:underline">
+                Sign In
+              </button>
+            </>
+          ) : (
+            <>
+              Don't have an account?{' '}
+              <button onClick={() => setIsSignUp(true)} className="text-[#5b32f6] font-bold hover:underline">
+                Sign Up
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

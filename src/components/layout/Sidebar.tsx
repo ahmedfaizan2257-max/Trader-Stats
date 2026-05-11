@@ -1,4 +1,4 @@
-import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share } from 'lucide-react';
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share, Sparkles } from 'lucide-react';
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
 
@@ -17,6 +17,7 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
     { id: 'customizer', label: 'Customizer', icon: Zap },
     { id: 'sharing', label: 'Sharing', icon: Share },
     { id: 'log', label: 'Trade Log', icon: ClipboardList },
+    { id: 'feedback', label: 'AI Feedback', icon: Sparkles },
     { id: 'student-dashboard', label: 'Student Dashboard', icon: GraduationCap },
     { id: 'settings', label: 'Settings', icon: Settings },
   ] as const;

@@ -10,19 +10,33 @@ import {
   Layers, ChevronLeft, ChevronRight, Filter, Share
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { FilterModal } from './FilterModal';
 
 export function Dashboard() {
-  const { trades } = useTrades();
+  const { trades, customSettings } = useTrades();
+  const themeColor = customSettings?.hexColor || '#5b32f6';
   const { user } = useAuth();
   
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [accountFilter, setAccountFilter] = useState<string>('All');
+
+  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>(() => {
+    const saved = localStorage.getItem('TradeTrack_connected_platforms');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const uniqueAccounts = Array.from(new Set(trades.map(t => t.account || 'Manual')));
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
 
   const selectedTrades = trades.filter(t => {
     const tDate = new Date(t.date);
-    return tDate >= monthStart && tDate <= monthEnd;
+    const inMonth = tDate >= monthStart && tDate <= monthEnd;
+    const matchAccount = accountFilter === 'All' || (t.account || 'Manual') === accountFilter;
+    return inMonth && matchAccount;
   });
   
   // Summary stats for selected month
@@ -105,19 +119,40 @@ export function Dashboard() {
     };
   });
 
-  const timeBreakdownData = [
-    { name: '0 - 15 sec', count: 0, winRate: 0 },
-    { name: '15 - 45 sec', count: 0, winRate: 0 },
-    { name: '45 sec - 1 min', count: 0, winRate: 0 },
-    { name: '1 - 2 min', count: 0, winRate: 0 },
-    { name: '2 - 5 min', count: 0, winRate: 0 },
-    { name: '5 - 10 min', count: 0, winRate: 0 },
-    { name: '10 - 30 min', count: 0, winRate: 0 },
-    { name: '30 min - 1 hour', count: 0, winRate: 0 },
-    { name: '1 - 2 hours', count: 0, winRate: 0 },
-    { name: '2 - 4 hours', count: 0, winRate: 0 },
-    { name: '4h+', count: 0, winRate: 0 },
-  ].reverse();
+  // Time per trade calculation
+  const tradesWithDuration = selectedTrades.filter(t => t.durationSeconds !== undefined && t.durationSeconds > 0);
+  const totalDuration = tradesWithDuration.reduce((sum, t) => sum + (t.durationSeconds || 0), 0);
+  const avgDurationMinutes = tradesWithDuration.length > 0 ? (totalDuration / tradesWithDuration.length) / 60 : 0;
+
+  // Real data for time breakdown
+  const timeBuckets = [
+    { name: '0 - 15 sec', min: 0, max: 15, count: 0, wins: 0 },
+    { name: '15 - 45 sec', min: 15, max: 45, count: 0, wins: 0 },
+    { name: '45 sec - 1 min', min: 45, max: 60, count: 0, wins: 0 },
+    { name: '1 - 2 min', min: 60, max: 120, count: 0, wins: 0 },
+    { name: '2 - 5 min', min: 120, max: 300, count: 0, wins: 0 },
+    { name: '5 - 10 min', min: 300, max: 600, count: 0, wins: 0 },
+    { name: '10 - 30 min', min: 600, max: 1800, count: 0, wins: 0 },
+    { name: '30 min - 1 hour', min: 1800, max: 3600, count: 0, wins: 0 },
+    { name: '1 - 2 hours', min: 3600, max: 7200, count: 0, wins: 0 },
+    { name: '2 - 4 hours', min: 7200, max: 14400, count: 0, wins: 0 },
+    { name: '4h+', min: 14400, max: Infinity, count: 0, wins: 0 },
+  ];
+
+  tradesWithDuration.forEach(t => {
+    const d = t.durationSeconds || 0;
+    const bucket = timeBuckets.find(b => d >= b.min && d < b.max);
+    if (bucket) {
+      bucket.count++;
+      if (t.pnl > 0) bucket.wins++;
+    }
+  });
+
+  const timeBreakdownData = timeBuckets.map(b => ({
+    name: b.name,
+    count: b.count,
+    winRate: b.count > 0 ? (b.wins / b.count) * 100 : 0
+  })).reverse();
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -138,7 +173,15 @@ export function Dashboard() {
       <header className="flex flex-col gap-2">
         <div>
           {user && <span className="text-sm font-bold text-slate-500 uppercase tracking-widest">HELLO, {user.displayName || user.email?.split('@')[0]} 👋</span>}
-          <h2 className="text-3xl font-bold tracking-tight mt-1 text-slate-900 dark:text-white">Performance Dashboard</h2>
+          <div className="flex items-center gap-3">
+             <h2 className="text-3xl font-bold tracking-tight mt-1 text-slate-900 dark:text-white">Performance Dashboard</h2>
+             {connectedPlatforms.map(platform => (
+               <span key={platform} className="mt-2 text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                 {platform.charAt(0).toUpperCase() + platform.slice(1)} ✅ Connected — Live
+               </span>
+             ))}
+          </div>
         </div>
         
         <div>
@@ -167,11 +210,23 @@ export function Dashboard() {
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
-             <button className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-slate-200 dark:border-slate-800/80 rounded-xl transition-colors text-sm font-semibold text-slate-700 dark:text-white">
+          <div className="flex items-center gap-3 relative">
+             <button 
+                onClick={() => setShowFilters(true)}
+                className={cn("flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-slate-200 dark:border-slate-800/80 rounded-xl transition-colors text-sm font-semibold text-slate-700 dark:text-white", showFilters && "bg-slate-100 dark:bg-slate-800/50")}>
                 <Filter className="w-4 h-4" /> Filters
              </button>
-             <button className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-slate-200 dark:border-slate-800/80 rounded-xl transition-colors text-sm font-semibold text-slate-700 dark:text-white">
+             <FilterModal 
+               isOpen={showFilters} 
+               onClose={() => setShowFilters(false)} 
+               onReset={() => setAccountFilter('All')} 
+             />
+             <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  import('sonner').then(m => m.toast.success('Dashboard link copied to clipboard! Share it with your friends.'));
+                }}
+                className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-slate-200 dark:border-slate-800/80 rounded-xl transition-colors text-sm font-semibold text-slate-700 dark:text-white">
                 <Share className="w-4 h-4" /> Share
              </button>
           </div>
@@ -182,7 +237,7 @@ export function Dashboard() {
         <BigStatCard icon={Percent} label="Win Rate" value={`${winRate.toFixed(2)}%`} />
         <BigStatCard icon={Activity} label="Profit Factor" value={profitFactor.toFixed(2)} />
         <BigStatCard icon={Divide} label="Avg Win / Avg Loss Ratio" value={`${avgWinLossRatio.toFixed(2)}+`} />
-        <BigStatCard icon={Clock} label="Avg Time per Trade" value="0.00 min" />
+        <BigStatCard icon={Clock} label="Avg Time per Trade" value={`${avgDurationMinutes.toFixed(2)} min`} />
       </div>
 
       <div className="flex flex-col gap-4 mt-8">
@@ -217,10 +272,10 @@ export function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="cumulative" 
-                  stroke="#5b32f6" 
+                  stroke={themeColor} 
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 4, fill: "#5b32f6", stroke: "#000", strokeWidth: 2 }}
+                  activeDot={{ r: 4, fill: themeColor, stroke: "#000", strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -258,7 +313,7 @@ export function Dashboard() {
                 <Bar 
                   dataKey="dailyPnl" 
                   radius={[2, 2, 2, 2]}
-                  fill="#5b32f6"
+                  fill={themeColor}
                   barSize={maxWinStreak > 30 ? 6 : undefined}
                 />
               </BarChart>
@@ -317,7 +372,7 @@ export function Dashboard() {
                 <Tooltip cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} contentStyle={{ backgroundColor: '#18181b', borderColor: '#333', borderRadius: '8px' }} />
                 <Bar 
                   dataKey="count" 
-                  fill="#5b32f6"
+                  fill={themeColor}
                   radius={[0, 4, 4, 0]}
                   barSize={16}
                   label={{ position: 'right', fill: '#888', fontSize: 11 }}
@@ -357,7 +412,7 @@ export function Dashboard() {
                 <Tooltip cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} contentStyle={{ backgroundColor: '#18181b', borderColor: '#333', borderRadius: '8px' }} />
                 <Bar 
                   dataKey="winRate" 
-                  fill="#5b32f6"
+                  fill={themeColor}
                   radius={[0, 4, 4, 0]}
                   barSize={16}
                   label={{ position: 'right', fill: '#888', fontSize: 11, formatter: (val: number) => `${val.toFixed(1)}%` }}
@@ -396,7 +451,7 @@ export function Dashboard() {
                 <Bar 
                   dataKey="pnl" 
                   radius={[4, 4, 4, 4]}
-                  fill="#5b32f6"
+                  fill={themeColor}
                 />
               </BarChart>
             </ResponsiveContainer>

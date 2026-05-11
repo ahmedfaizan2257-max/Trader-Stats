@@ -320,10 +320,11 @@ function CreateGoalModal({ onClose, onSave }: { onClose: () => void, onSave: (go
       targetValue: parseFloat(targetValue),
       currentValue: 0,
       startDate,
-      endDate: endDate || undefined,
+      ...(endDate ? { endDate } : {}),
       status: 'Active'
     };
     onSave(goal);
+    import('sonner').then(m => m.toast.success('Goal created successfully'));
     onClose();
   };
 

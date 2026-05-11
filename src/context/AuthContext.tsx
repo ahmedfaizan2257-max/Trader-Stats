@@ -4,6 +4,9 @@ import {
   signInWithPopup, 
   signOut, 
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
   AuthProvider as FirebaseAuthProvider
 } from 'firebase/auth';
 import { auth, googleProvider, microsoftProvider, appleProvider } from '../lib/firebase';
@@ -14,6 +17,8 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signInWithMicrosoft: () => Promise<void>;
   signInWithApple: () => Promise<void>;
+  signUpWithEmail: (email: string, pass: string, name?: string) => Promise<void>;
+  signInWithEmail: (email: string, pass: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -49,6 +54,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const handleSignUpWithEmail = async (email: string, pass: string, name?: string) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, pass);
+      if (name) {
+        await updateProfile(res.user, { displayName: name });
+      }
+      // Reload user so context gets the new name
+      await res.user.reload();
+      setUser({ ...auth.currentUser! });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const handleSignInWithEmail = async (email: string, pass: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -56,6 +85,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       signInWithGoogle: () => handleSignIn(googleProvider),
       signInWithMicrosoft: () => handleSignIn(microsoftProvider),
       signInWithApple: () => handleSignIn(appleProvider),
+      signUpWithEmail: handleSignUpWithEmail,
+      signInWithEmail: handleSignInWithEmail,
       logout: () => signOut(auth)
     }}>
       {children}

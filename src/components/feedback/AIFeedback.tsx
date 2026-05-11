@@ -29,24 +29,25 @@ export function AIFeedback() {
       const ai = new GoogleGenAI({ apiKey });
       
       const prompt = `You are an expert trading coach. Analyze the following trading log and provide a detailed, constructive feedback report.
-      
+
 Trade Data (JSON):
 ${JSON.stringify(trades, null, 2)}
 
-Format your response exactly with these markdown sections:
-### 🌟 Successes this month
-[Analyze what went well]
+Format your response exactly with these markdown sections without any emojis:
 
-### 🚧 Key challenges & weaknesses
-[Identify patterns of losses or mistakes]
+### What was the trade
 
-### 🎯 Actionable improvement steps
-[Give 2-3 specific rules to implement]
+[Summarize the trades in a single line paragraph]
 
-### 📊 Overall assessment
-[A brief summary of their performance and trajectory]
+### What went wrong
 
-Keep it concise, professional, and actionable. Do not output anything outside of these sections.`;
+[Identify what went wrong in a single line paragraph]
+
+### How to improve it
+
+[Give actionable improvement steps in a single line paragraph]
+
+Keep it concise, professional, and actionable. Do not output anything outside of these sections, and do completely omit all emojis from your response.`;
 
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
@@ -122,7 +123,7 @@ Keep it concise, professional, and actionable. Do not output anything outside of
             <Sparkles className="w-4 h-4" />
             Regenerate Analysis
           </button>
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 prose prose-invert prose-p:text-slate-700 dark:text-slate-300 prose-headings:text-cyan-400 prose-headings:mt-6 prose-headings:mb-2 prose-headings:text-lg prose-headings:font-semibold max-w-none prose-li:text-slate-700 dark:text-slate-300 shadow-sm custom-markdown prose-strong:text-slate-100">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 prose prose-slate dark:prose-invert prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-headings:text-cyan-400 prose-headings:mt-8 prose-headings:mb-4 prose-headings:text-xl prose-headings:font-bold max-w-none shadow-sm pb-8">
             <Markdown>{feedback}</Markdown>
           </div>
         </div>

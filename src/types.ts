@@ -11,6 +11,7 @@ export interface Trade {
   pnl: number; // For simplicity, calculated P&L 
   notes: string;
   account?: string;
+  durationSeconds?: number;
 }
 
 export interface JournalEntry {

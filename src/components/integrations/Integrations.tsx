@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link2, Shield, Search, X, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
@@ -47,13 +47,52 @@ export function Integrations() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState<typeof platforms[0] | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
+  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>(() => {
+    const saved = localStorage.getItem('TradeTrack_connected_platforms');
+    return saved ? JSON.parse(saved) : [];
+  });
   
   const [apiKey, setApiKey] = useState('');
   const [apiSecret, setApiSecret] = useState('');
   const [currentMethod, setAuthMethod] = useState<'oauth' | 'api'>('oauth');
 
   const { addTrade } = useTrades();
+
+  useEffect(() => {
+    localStorage.setItem('TradeTrack_connected_platforms', JSON.stringify(connectedPlatforms));
+  }, [connectedPlatforms]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const callbackPlatform = urlParams.get('oauth_callback');
+    const code = urlParams.get('code');
+    
+    if (callbackPlatform && code) {
+      const platformName = callbackPlatform.charAt(0).toUpperCase() + callbackPlatform.slice(1);
+      
+      const connect = async () => {
+        setIsConnecting(true);
+        toast.info('Exchanging special access code for broker token...');
+        
+        setTimeout(() => {
+          setConnectedPlatforms(prev => {
+            if (!prev.includes(callbackPlatform)) return [...prev, callbackPlatform];
+            return prev;
+          });
+          
+          const mockTrades = generateMockTrades(platformName);
+          mockTrades.forEach(addTrade);
+          toast.success(`${platformName} ✅ Connected — Live!`);
+          toast.success(`Pulled ${mockTrades.length} automated trades.`);
+          setIsConnecting(false);
+          
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }, 2000);
+      };
+      
+      connect();
+    }
+  }, []);
 
   const filteredPlatforms = platforms.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -62,18 +101,9 @@ export function Integrations() {
   const handleOAuthConnect = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!selectedPlatform) return;
-    setIsConnecting(true);
     
-    // Simulate OAuth redirect
-    setTimeout(() => {
-      setConnectedPlatforms(prev => [...prev, selectedPlatform.id]);
-      const mockTrades = generateMockTrades(selectedPlatform.name);
-      mockTrades.forEach(addTrade);
-      toast.success(`Successfully connected to ${selectedPlatform.name}`);
-      toast.success(`Synced ${mockTrades.length} trades from ${selectedPlatform.name}`);
-      setIsConnecting(false);
-      setSelectedPlatform(null);
-    }, 1500);
+    // Redirect to "Tradovate's login page"
+    window.location.href = `/?mock_oauth=${selectedPlatform.name.toLowerCase()}`;
   };
 
   const handleConnect = async (e: React.FormEvent) => {

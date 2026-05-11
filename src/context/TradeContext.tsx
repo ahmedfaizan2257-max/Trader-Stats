@@ -4,6 +4,14 @@ import { useAuth } from './AuthContext';
 import { collection, doc, onSnapshot, setDoc, deleteDoc, writeBatch } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
+export interface CustomSettings {
+  bgImage: string;
+  hexColor: string;
+  angle: number;
+  opacity: number;
+  theme: string;
+}
+
 interface TradeContextType {
   trades: Trade[];
   addTrade: (trade: Trade) => void;
@@ -19,6 +27,8 @@ interface TradeContextType {
   addAccount: (account: TradingAccount) => void;
   updateAccount: (id: string, updates: Partial<TradingAccount>) => void;
   deleteAccount: (id: string) => void;
+  customSettings: CustomSettings;
+  updateCustomSettings: (settings: CustomSettings) => void;
 }
 
 const TradeContext = createContext<TradeContextType | undefined>(undefined);
@@ -44,6 +54,22 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<TradingAccount[]>(() => {
     const saved = localStorage.getItem('TradeTrack_accounts');
     return saved ? JSON.parse(saved) : [];
+  });
+
+  const [customSettings, setCustomSettings] = useState<CustomSettings>(() => {
+    const saved = localStorage.getItem('TradeTrack_settings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop',
+      hexColor: '#7C3AED',
+      angle: 135,
+      opacity: 85,
+      theme: 'PURPLE TRIANGLE',
+    };
   });
 
   useEffect(() => {
@@ -114,6 +140,14 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('TradeTrack_accounts', JSON.stringify(accounts));
     }
   }, [accounts, user]);
+
+  useEffect(() => {
+    localStorage.setItem('TradeTrack_settings', JSON.stringify(customSettings));
+  }, [customSettings]);
+
+  const updateCustomSettings = (settings: CustomSettings) => {
+    setCustomSettings(settings);
+  };
 
   const addTrade = async (trade: Trade) => {
     if (user) {
@@ -208,7 +242,8 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
       trades, addTrade, deleteTrade, clearAllTrades,
       journalEntries, addJournalEntry,
       goals, addGoal, updateGoal, deleteGoal,
-      accounts, addAccount, updateAccount, deleteAccount
+      accounts, addAccount, updateAccount, deleteAccount,
+      customSettings, updateCustomSettings
     }}>
       {children}
     </TradeContext.Provider>

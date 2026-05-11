@@ -1,7 +1,8 @@
 import { Check, Upload, RefreshCw, User, TrendingUp } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
+import { useTrades, CustomSettings } from '../../context/TradeContext';
 import { toast } from 'sonner';
 
 const THEMES = {
@@ -10,26 +11,36 @@ const THEMES = {
     hexColor: '#7C3AED',
     angle: 135,
     opacity: 85,
+    theme: 'PURPLE TRIANGLE'
   },
   'NEON BEAMS': {
     bgImage: 'https://images.unsplash.com/photo-1550684376-efcbd6e3f031?q=80&w=2000&auto=format&fit=crop',
     hexColor: '#ff007f',
     angle: 135,
     opacity: 70,
+    theme: 'NEON BEAMS'
   },
   'MY DESIGN': {
     bgImage: '',
     hexColor: '#7C3AED',
     angle: 135,
     opacity: 85,
+    theme: 'MY DESIGN'
   }
 };
 
 export function Customizer() {
   const { user } = useAuth();
-  const [selectedTheme, setSelectedTheme] = useState<'PURPLE TRIANGLE' | 'NEON BEAMS' | 'MY DESIGN'>('PURPLE TRIANGLE');
+  const { customSettings: globalSettings, updateCustomSettings } = useTrades();
   
-  const [customSettings, setCustomSettings] = useState({ ...THEMES['PURPLE TRIANGLE'] });
+  const [selectedTheme, setSelectedTheme] = useState<string>(globalSettings.theme || 'PURPLE TRIANGLE');
+  
+  const [customSettings, setCustomSettings] = useState<CustomSettings>(globalSettings);
+
+  useEffect(() => {
+    setCustomSettings(globalSettings);
+    setSelectedTheme(globalSettings.theme || 'MY DESIGN');
+  }, [globalSettings]);
 
   const handleThemeChange = (theme: keyof typeof THEMES) => {
     setSelectedTheme(theme);
@@ -37,7 +48,8 @@ export function Customizer() {
   };
 
   const handleSettingChange = (key: string, value: string | number) => {
-    setCustomSettings(prev => ({ ...prev, [key]: value }));
+    setCustomSettings(prev => ({ ...prev, [key]: value, theme: 'MY DESIGN' }));
+    setSelectedTheme('MY DESIGN');
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,12 +65,14 @@ export function Customizer() {
   };
 
   const handleResetToDefault = () => {
-    setCustomSettings({ ...THEMES[selectedTheme] });
+    setCustomSettings({ ...THEMES['PURPLE TRIANGLE'] });
+    setSelectedTheme('PURPLE TRIANGLE');
+    updateCustomSettings({ ...THEMES['PURPLE TRIANGLE'] });
     toast.success('Your active preset has been updated successfully.');
   };
 
   const handleSaveSettings = () => {
-    // Optionally: Save to TradeContext or localStorage
+    updateCustomSettings(customSettings);
     toast.success('Settings saved successfully!');
   };
 

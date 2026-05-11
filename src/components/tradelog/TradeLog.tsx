@@ -26,11 +26,13 @@ export function TradeLog() {
         const parsedTrades: Trade[] = results.data.map((row: any) => {
           let direction: Direction = (row.Direction || row.direction || 'Long') as Direction;
           let dateStr = row.Date || row.date || new Date().toISOString().split('T')[0];
+          let durationSeconds = undefined;
           
           if (row.boughtTimestamp && row.soldTimestamp) {
             const boughtDate = new Date(row.boughtTimestamp);
             const soldDate = new Date(row.soldTimestamp);
             if (!isNaN(boughtDate.getTime()) && !isNaN(soldDate.getTime())) {
+               durationSeconds = Math.abs((soldDate.getTime() - boughtDate.getTime()) / 1000);
                if (boughtDate <= soldDate) {
                  direction = 'Long';
                  dateStr = boughtDate.toISOString().split('T')[0];
@@ -64,7 +66,8 @@ export function TradeLog() {
             exitPrice,
             contracts: Math.max(1, Math.floor(parseNumericString(row.Contracts || row.Size || row.contracts || row.qty || 1))),
             pnl: parseNumericString(row.PnL || row.Pnl || row.pnl || row.NetPnL || row['Net P&L'] || row.pnl),
-            notes: row.Notes || row.notes || ''
+            notes: row.Notes || row.notes || '',
+            durationSeconds
           };
         });
 
