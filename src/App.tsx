@@ -22,6 +22,7 @@ import { MockOAuthPage } from './components/integrations/MockOAuthPage';
 import { Tab } from './types';
 import { Menu, X, TrendingUp } from 'lucide-react';
 import { ThemeProvider } from './components/ThemeProvider';
+import { ThemeToggle } from './components/ThemeToggle';
 import { useAuth } from './context/AuthContext';
 import { Toaster } from 'sonner';
 
@@ -141,16 +142,23 @@ export default function App() {
         )}
 
         <main className="flex-1 overflow-y-auto bg-slate-100 dark:bg-[#0a0f18] p-4 md:p-8 relative">
-          <div className="md:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setAppMode('landing')}>
+          <div className="flex items-center justify-between mb-6 pb-4 md:pb-0 border-b border-slate-200 dark:border-slate-800 md:border-none md:mb-8">
+            <div className="md:hidden flex items-center gap-2 cursor-pointer" onClick={() => setAppMode('landing')}>
               <TrendingUp className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
               <h1 className="text-xl font-bold tracking-tight text-[#5b32f6]">
                 TradeEdge
               </h1>
             </div>
-            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-slate-400 hover:text-slate-100">
-               <Menu />
-            </button>
+            <div className="hidden md:block">
+              {/* Spacer empty div for desktop flex alignment */}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button onClick={() => setMobileMenuOpen(true)} className="md:hidden p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
+                 <Menu />
+              </button>
+            </div>
           </div>
           
           <div className="max-w-7xl mx-auto pb-24">
