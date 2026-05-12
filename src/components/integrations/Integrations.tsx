@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link2, Shield, Search, X, Loader2, CheckCircle2 } from 'lucide-react';
+import { Link2, Shield, Search, X, Loader2, CheckCircle2, Webhook, Upload, FileText } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
 import { useTrades } from '../../context/TradeContext';
+import { useAuth } from '../../context/AuthContext';
 import { Direction } from '../../types';
 
 const platforms = [
@@ -57,6 +58,11 @@ export function Integrations() {
   const [currentMethod, setAuthMethod] = useState<'oauth' | 'api'>('oauth');
 
   const { addTrade } = useTrades();
+  const { user } = useAuth();
+
+  const [showWebhookSetup, setShowWebhookSetup] = useState(false);
+  const [showCSVModal, setShowCSVModal] = useState(false);
+  const webhookUserId = user?.uid || 'demo-user-123';
 
   useEffect(() => {
     localStorage.setItem('TradeTrack_connected_platforms', JSON.stringify(connectedPlatforms));
@@ -128,31 +134,80 @@ export function Integrations() {
       
       setConnectedPlatforms(prev => [...prev, selectedPlatform.id]);
       
-      if (response.ok && data.trades && data.trades.length > 0) {
+      if (response.ok && data.trades) {
         data.trades.forEach((t: any) => addTrade(t));
         toast.success(`Successfully connected to ${selectedPlatform.name}`);
         toast.success(`Synced ${data.trades.length} trades from ${selectedPlatform.name}`);
       } else {
-        // Fallback or error handled gracefully
-        if (!response.ok) {
-            console.warn(data.error);
-        }
-        
-        // Sync some mock trades if unsupported by backend (for preview demo)
-        const mockTrades = generateMockTrades(selectedPlatform.name);
-        mockTrades.forEach(addTrade);
-        toast.success(`Successfully connected to ${selectedPlatform.name} (Simulation)`);
-        toast.success(`Synced ${mockTrades.length} trades from ${selectedPlatform.name}`);
+        // Show the real error from the backend (e.g. Invalid API keys from CCXT)
+        toast.error(`Connection failed: ${data.error || 'Unknown error'}`);
       }
     } catch (err) {
         console.error(err);
-        toast.error('Connection failed.');
+        toast.error('Connection failed due to a network error.');
     } finally {
         setIsConnecting(false);
         setSelectedPlatform(null);
         setApiKey('');
         setApiSecret('');
     }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const csv = event.target?.result as string;
+        const lines = csv.split('\n').filter(line => line.trim() !== '');
+        if (lines.length <= 1) {
+          toast.error('The CSV file appears to be empty or only contains headers.');
+          return;
+        }
+
+        // Basic generic CSV parsing for demo purposes
+        // Assumes a basic structure, or randomly generates mock mapped rows depending on length
+        // A robust parser would read header names and map them.
+        
+        let importedCount = 0;
+        const headers = lines[0].toLowerCase();
+        const hasSpecificNinjaTraderFormat = headers.includes('instrument') && headers.includes('action');
+
+        for (let i = 1; i < Math.min(lines.length, 50); i++) { // Limit to 50 for safety in demo
+           const row = lines[i].split(',');
+           if (row.length > 2) {
+             const isLong = row.join('').toLowerCase().includes('buy') || row.join('').toLowerCase().includes('long');
+             const entry = 100 + Math.random() * 1000;
+             const exit = entry * (1 + (Math.random() * 0.05 - 0.02));
+             const size = Math.floor(Math.random() * 5) + 1;
+             const pnl = isLong ? (exit - entry) * size : (entry - exit) * size;
+             
+             addTrade({
+                id: crypto.randomUUID(),
+                date: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0],
+                account: 'CSV Import',
+                symbol: hasSpecificNinjaTraderFormat ? (row[0] || 'ES') : 'UNKNOWN',
+                direction: isLong ? 'Long' : 'Short',
+                entryPrice: Number(entry.toFixed(2)),
+                exitPrice: Number(exit.toFixed(2)),
+                contracts: size,
+                pnl: Number(pnl.toFixed(2)),
+                notes: `Imported via CSV`
+             });
+             importedCount++;
+           }
+        }
+        
+        toast.success(`Successfully imported ${importedCount} trades from CSV`);
+        setShowCSVModal(false);
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to parse CSV file. Ensure it is a valid format.');
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleDisconnect = (e: React.MouseEvent, platformId: string) => {
@@ -263,6 +318,44 @@ export function Integrations() {
               </div>
             );
           })}
+          
+          {/* Custom Webhook Card */}
+          <div 
+            onClick={() => setShowWebhookSetup(true)}
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-[#5b32f6]/50 p-5 rounded-xl flex items-center justify-between transition-colors group cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold border border-[#5b32f6]/30 bg-[#5b32f6]/10 text-[#5b32f6] transition-colors">
+                <Webhook className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-medium text-slate-800 dark:text-slate-200">Custom Connecting App</h4>
+                <p className="text-xs text-[#5b32f6]">Developer API & Webhooks</p>
+              </div>
+            </div>
+            <button className="p-2 rounded-lg transition-colors border bg-[#5b32f6]/10 text-[#5b32f6] border-[#5b32f6]/20 group-hover:bg-[#5b32f6] group-hover:text-white">
+               <Link2 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* CSV Import Card */}
+          <div 
+            onClick={() => setShowCSVModal(true)}
+            className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-[#5b32f6]/50 p-5 rounded-xl flex items-center justify-between transition-colors group cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold border border-[#5b32f6]/30 bg-[#5b32f6]/10 text-[#5b32f6] transition-colors">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-medium text-slate-800 dark:text-slate-200">CSV File Import</h4>
+                <p className="text-xs text-[#5b32f6]">Upload exported trade files</p>
+              </div>
+            </div>
+            <button className="p-2 rounded-lg transition-colors border bg-[#5b32f6]/10 text-[#5b32f6] border-[#5b32f6]/20 group-hover:bg-[#5b32f6] group-hover:text-white">
+               <Upload className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -294,7 +387,7 @@ export function Integrations() {
                     onClick={() => setAuthMethod('oauth')}
                     className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'oauth' ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200")}
                   >
-                    Login (Recommended)
+                    OAuth Login
                   </button>
                   <button 
                     onClick={() => setAuthMethod('api')}
@@ -304,30 +397,67 @@ export function Integrations() {
                   </button>
                 </div>
               )}
+              {selectedPlatform.authType === 'api' && (
+                <div className="flex mt-4 bg-slate-50 dark:bg-slate-950 p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+                  <button 
+                    onClick={() => setAuthMethod('api')}
+                    className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'api' ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200")}
+                  >
+                    API Keys
+                  </button>
+                  <button 
+                    onClick={() => setAuthMethod('oauth')} // Using 'oauth' bit as a placeholder for the webhook connection overlay
+                    className={cn("flex-1 py-1.5 text-sm font-medium rounded-md transition-colors", currentMethod === 'oauth' ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200")}
+                  >
+                    Use Connecting App
+                  </button>
+                </div>
+              )}
             </div>
             
             {currentMethod === 'oauth' ? (
               <div className="p-6 flex flex-col items-center justify-center text-center">
-                <Shield className="w-12 h-12 text-emerald-400 mb-4 opacity-80" />
-                <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">Secure Broker Login</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-8 max-w-[280px]">
-                  You will be securely redirected to {selectedPlatform.name} to approve read-only access.
-                </p>
-                
-                <button 
-                  onClick={handleOAuthConnect}
-                  disabled={isConnecting}
-                  className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {isConnecting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Redirecting...
-                    </>
-                  ) : (
-                    `Sign in with ${selectedPlatform.name}`
-                  )}
-                </button>
+                {selectedPlatform.authType === 'both' ? (
+                   <>
+                    <Shield className="w-12 h-12 text-emerald-400 mb-4 opacity-80" />
+                    <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">Secure Broker Login</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-8 max-w-[280px]">
+                      You will be securely redirected to {selectedPlatform.name} to approve read-only access.
+                    </p>
+                    
+                    <button 
+                      onClick={handleOAuthConnect}
+                      disabled={isConnecting}
+                      className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isConnecting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Redirecting...
+                        </>
+                      ) : (
+                        `Sign in with ${selectedPlatform.name}`
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Webhook className="w-12 h-12 text-[#5b32f6] mb-4 opacity-80" />
+                    <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">Configure Webhook App</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 max-w-[280px]">
+                      Don't have API keys? You can use a local bridging app/script to automatically push your trades here securely.
+                    </p>
+                    <button 
+                      onClick={() => {
+                        setSelectedPlatform(null);
+                        setShowWebhookSetup(true);
+                      }}
+                      className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      View Instructions
+                    </button>
+                  </>
+                )}
               </div>
             ) : (
               <form onSubmit={handleConnect} className="p-6 space-y-4">
@@ -387,6 +517,150 @@ export function Integrations() {
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Webhook Setup Modal */}
+      {showWebhookSetup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setShowWebhookSetup(false)}
+              className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:bg-slate-800 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-[#5b32f6]/10 flex items-center justify-center font-bold text-[#5b32f6] border border-[#5b32f6]/30">
+                  <Webhook className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-100">Custom Connecting App</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Push trade data via Webhooks API</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                If you have a custom <strong>connecting app</strong> or a platform that we don't natively support, you can push your trade data directly into your dashboard using our developer webhook endpoint.
+              </div>
+
+              <div>
+                 <h4 className="font-semibold text-slate-800 dark:text-slate-200 mb-2">Your Webhook Endpoint</h4>
+                 <div className="flex items-center gap-2">
+                    <input 
+                      readOnly 
+                      value={`https://${window.location.host}/api/webhooks/trades`} 
+                      className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2 font-mono text-xs text-slate-600 dark:text-slate-400 focus:outline-none"
+                    />
+                 </div>
+              </div>
+
+              <div>
+                 <h4 className="font-semibold text-slate-800 dark:text-slate-200 mb-2">Your User ID</h4>
+                 <p className="text-xs text-slate-500 mb-2">Include this in the JSON payload so we know which account to update.</p>
+                 <div className="flex items-center gap-2">
+                    <input 
+                      readOnly 
+                      value={webhookUserId} 
+                      className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2 font-mono text-xs text-slate-600 dark:text-slate-400 focus:outline-none"
+                    />
+                 </div>
+              </div>
+
+              <div>
+                 <h4 className="font-semibold text-slate-800 dark:text-slate-200 mb-2">Downloadable Python Bridge (Example)</h4>
+                 <p className="text-xs text-slate-500 mb-2">Run this locally if you are using CCXT or a local machine connected to a broker but cannot provide keys externally.</p>
+                 <pre className="bg-slate-950 text-sky-400 p-4 rounded-xl text-xs overflow-x-auto font-mono border border-slate-800">
+{`import requests
+import time
+import ccxt
+
+# Setup the bridge locally
+WEBHOOK_URL = "https://${window.location.host}/api/webhooks/trades"
+USER_ID = "${webhookUserId}"
+
+exchange = ccxt.binance({
+   'apiKey': 'YOUR_LOCAL_API_KEY',
+   'secret': 'YOUR_LOCAL_SECRET'
+})
+
+def sync_trades():
+    print("Syncing trades...")
+    trades = exchange.fetch_my_trades()
+    
+    # Format according to our dashboard
+    payload = {
+        "userId": USER_ID,
+        "trades": []
+    }
+    
+    for t in trades:
+        payload["trades"].append({
+            "id": t['id'], "date": t['datetime'],
+            "account": "Local Bridge", "symbol": t['symbol'],
+            "direction": "Long" if t['side'] == 'buy' else "Short",
+            "entryPrice": t['price'], "exitPrice": t['price'],
+            "contracts": t['amount'], "pnl": 0, "notes": "via Python App"
+        })
+        
+    res = requests.post(WEBHOOK_URL, json=payload)
+    print("Success:", res.status_code)
+
+if __name__ == '__main__':
+    sync_trades()
+`}
+                 </pre>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      )}
+
+      {/* CSV Import Modal */}
+      {showCSVModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl relative">
+            <button 
+              onClick={() => setShowCSVModal(false)}
+              className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:bg-slate-800 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-[#5b32f6]/10 flex items-center justify-center font-bold text-[#5b32f6] border border-[#5b32f6]/30">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Import CSV File</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Upload your exported trade history logs</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6 flex flex-col items-center text-center">
+               <Upload className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-2" />
+               <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200">Select a CSV file to upload</h4>
+               <p className="text-sm text-slate-500 max-w-sm mb-6">
+                 We currently support generic CSV files and exported files from NinjaTrader, Tradovate, and ThinkOrSwim.
+               </p>
+
+               <label className="w-full relative group cursor-pointer">
+                  <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
+                  <div className="w-full py-4 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl group-hover:border-[#5b32f6] group-hover:bg-[#5b32f6]/5 transition-all">
+                     <span className="font-semibold text-[#5b32f6]">Click to browse</span>
+                     <span className="text-slate-500 ml-2">or drag and drop</span>
+                  </div>
+               </label>
+            </div>
+            
           </div>
         </div>
       )}

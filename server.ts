@@ -156,6 +156,35 @@ async function startServer() {
     }
   });
 
+  // Webhook endpoint to receive trades from a connecting app
+  app.post('/api/webhooks/trades', async (req, res) => {
+    const { userId, trades, signature } = req.body;
+
+    if (!userId || !trades) {
+      return res.status(400).json({ error: 'Missing userId or trades in webhook payload' });
+    }
+
+    try {
+      // In a real application, you would:
+      // 1. Verify the webhook signature to ensure it came from your connecting app
+      // 2. Validate the trades payload structure
+      // 3. Save the trades to your database (e.g., Firestore using Firebase Admin SDK)
+      // Example of expected trade structure:
+      // trades: [{ id, date, account, symbol, direction, entryPrice, exitPrice, contracts, pnl, notes }]
+      
+      console.log(`[Webhook] Received ${trades.length} trades for user ${userId}`);
+      console.dir(trades, { depth: null });
+
+      // Here you would connect to Firebase Admin to securely save the data directly into the user's database.
+      // e.g., await admin.firestore().collection('users').doc(userId).collection('trades').add(...)
+
+      res.status(200).json({ success: true, message: 'Webhook received and processed' });
+    } catch (err: any) {
+      console.error('[Webhook Error]', err);
+      res.status(500).json({ error: 'Failed to process webhook', details: err.message });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

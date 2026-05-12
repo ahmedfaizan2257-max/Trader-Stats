@@ -34,8 +34,10 @@ interface TradeContextType {
 const TradeContext = createContext<TradeContextType | undefined>(undefined);
 
 export function TradeProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, viewingUserId } = useAuth();
   
+  const targetUid = viewingUserId || user?.uid;
+
   const [trades, setTrades] = useState<Trade[]>(() => {
     const saved = localStorage.getItem('TradeTrack_trades');
     return saved ? JSON.parse(saved) : [];
@@ -73,7 +75,7 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    if (!user) {
+    if (!targetUid) {
       setTrades([]);
       setJournalEntries([]);
       setGoals([]);
@@ -81,28 +83,28 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     
-    const unsubscribeTrades = onSnapshot(collection(db, 'users', user.uid, 'trades'), (snapshot) => {
+    const unsubscribeTrades = onSnapshot(collection(db, 'users', targetUid, 'trades'), (snapshot) => {
        const userTrades = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Trade));
        setTrades(userTrades.sort((a,b) => a.date.localeCompare(b.date)));
     }, (error) => {
        console.error("Trades snapshot error:", error);
     });
 
-    const unsubscribeJournal = onSnapshot(collection(db, 'users', user.uid, 'journal'), (snapshot) => {
+    const unsubscribeJournal = onSnapshot(collection(db, 'users', targetUid, 'journal'), (snapshot) => {
        const userJournal = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as JournalEntry));
        setJournalEntries(userJournal.sort((a,b) => a.date.localeCompare(b.date)));
     }, (error) => {
        console.error("Journal snapshot error:", error);
     });
 
-    const unsubscribeGoals = onSnapshot(collection(db, 'users', user.uid, 'goals'), (snapshot) => {
+    const unsubscribeGoals = onSnapshot(collection(db, 'users', targetUid, 'goals'), (snapshot) => {
        const userGoals = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Goal));
        setGoals(userGoals.sort((a,b) => a.startDate.localeCompare(b.startDate)));
     }, (error) => {
        console.error("Goals snapshot error:", error);
     });
 
-    const unsubscribeAccounts = onSnapshot(collection(db, 'users', user.uid, 'accounts'), (snapshot) => {
+    const unsubscribeAccounts = onSnapshot(collection(db, 'users', targetUid, 'accounts'), (snapshot) => {
        const userAccounts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TradingAccount));
        setAccounts(userAccounts.sort((a,b) => a.createdAt.localeCompare(b.createdAt)));
     }, (error) => {
@@ -115,31 +117,31 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
       unsubscribeGoals();
       unsubscribeAccounts();
     };
-  }, [user]);
+  }, [targetUid]);
 
   useEffect(() => {
-    if (!user) {
+    if (!targetUid) {
       localStorage.setItem('TradeTrack_trades', JSON.stringify(trades));
     }
-  }, [trades, user]);
+  }, [trades, targetUid]);
 
   useEffect(() => {
-    if (!user) {
+    if (!targetUid) {
       localStorage.setItem('TradeTrack_journal', JSON.stringify(journalEntries));
     }
-  }, [journalEntries, user]);
+  }, [journalEntries, targetUid]);
 
   useEffect(() => {
-    if (!user) {
+    if (!targetUid) {
       localStorage.setItem('TradeTrack_goals', JSON.stringify(goals));
     }
-  }, [goals, user]);
+  }, [goals, targetUid]);
 
   useEffect(() => {
-    if (!user) {
+    if (!targetUid) {
       localStorage.setItem('TradeTrack_accounts', JSON.stringify(accounts));
     }
-  }, [accounts, user]);
+  }, [accounts, targetUid]);
 
   useEffect(() => {
     localStorage.setItem('TradeTrack_settings', JSON.stringify(customSettings));
@@ -150,26 +152,26 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addTrade = async (trade: Trade) => {
-    if (user) {
-      await setDoc(doc(db, 'users', user.uid, 'trades', trade.id), trade);
+    if (targetUid) {
+      await setDoc(doc(db, 'users', targetUid, 'trades', trade.id), trade);
     } else {
       setTrades(prev => [...prev, trade].sort((a,b) => a.date.localeCompare(b.date)));
     }
   };
 
   const deleteTrade = async (id: string) => {
-    if (user) {
-      await deleteDoc(doc(db, 'users', user.uid, 'trades', id));
+    if (targetUid) {
+      await deleteDoc(doc(db, 'users', targetUid, 'trades', id));
     } else {
       setTrades(prev => prev.filter(t => t.id !== id));
     }
   };
 
   const clearAllTrades = async () => {
-    if (user) {
+    if (targetUid) {
       const batch = writeBatch(db);
       trades.forEach(t => {
-         batch.delete(doc(db, 'users', user.uid, 'trades', t.id));
+         batch.delete(doc(db, 'users', targetUid, 'trades', t.id));
       });
       await batch.commit();
     } else {
@@ -178,9 +180,9 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
   };
   
   const addJournalEntry = async (entry: JournalEntry) => {
-    if (user) {
+    if (targetUid) {
       // Use date as standard ID to maintain 1 entry per day
-      await setDoc(doc(db, 'users', user.uid, 'journal', entry.date), entry);
+      await setDoc(doc(db, 'users', targetUid, 'journal', entry.date), entry);
     } else {
       setJournalEntries(prev => {
         const existingFilter = prev.filter(e => e.date !== entry.date);
@@ -190,48 +192,48 @@ export function TradeProvider({ children }: { children: React.ReactNode }) {
   }
 
   const addGoal = async (goal: Goal) => {
-    if (user) {
-      await setDoc(doc(db, 'users', user.uid, 'goals', goal.id), goal);
+    if (targetUid) {
+      await setDoc(doc(db, 'users', targetUid, 'goals', goal.id), goal);
     } else {
       setGoals(prev => [...prev, goal].sort((a,b) => a.startDate.localeCompare(b.startDate)));
     }
   };
 
   const updateGoal = async (id: string, updates: Partial<Goal>) => {
-    if (user) {
-      await setDoc(doc(db, 'users', user.uid, 'goals', id), updates, { merge: true });
+    if (targetUid) {
+      await setDoc(doc(db, 'users', targetUid, 'goals', id), updates, { merge: true });
     } else {
        setGoals(prev => prev.map(g => g.id === id ? { ...g, ...updates } : g));
     }
   }
 
   const deleteGoal = async (id: string) => {
-    if (user) {
-      await deleteDoc(doc(db, 'users', user.uid, 'goals', id));
+    if (targetUid) {
+      await deleteDoc(doc(db, 'users', targetUid, 'goals', id));
     } else {
       setGoals(prev => prev.filter(g => g.id !== id));
     }
   };
 
   const addAccount = async (account: TradingAccount) => {
-    if (user) {
-      await setDoc(doc(db, 'users', user.uid, 'accounts', account.id), account);
+    if (targetUid) {
+      await setDoc(doc(db, 'users', targetUid, 'accounts', account.id), account);
     } else {
       setAccounts(prev => [...prev, account].sort((a,b) => a.createdAt.localeCompare(b.createdAt)));
     }
   };
 
   const updateAccount = async (id: string, updates: Partial<TradingAccount>) => {
-    if (user) {
-      await setDoc(doc(db, 'users', user.uid, 'accounts', id), updates, { merge: true });
+    if (targetUid) {
+      await setDoc(doc(db, 'users', targetUid, 'accounts', id), updates, { merge: true });
     } else {
        setAccounts(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
     }
   }
 
   const deleteAccount = async (id: string) => {
-    if (user) {
-      await deleteDoc(doc(db, 'users', user.uid, 'accounts', id));
+    if (targetUid) {
+      await deleteDoc(doc(db, 'users', targetUid, 'accounts', id));
     } else {
       setAccounts(prev => prev.filter(a => a.id !== id));
     }

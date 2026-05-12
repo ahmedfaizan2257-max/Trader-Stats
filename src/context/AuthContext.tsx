@@ -9,11 +9,14 @@ import {
   updateProfile,
   AuthProvider as FirebaseAuthProvider
 } from 'firebase/auth';
-import { auth, googleProvider, microsoftProvider, appleProvider } from '../lib/firebase';
+import { auth, db, googleProvider, microsoftProvider, appleProvider } from '../lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  viewingUserId: string | null;
+  setViewingUserId: (id: string | null) => void;
   signInWithGoogle: () => Promise<void>;
   signInWithMicrosoft: () => Promise<void>;
   signInWithApple: () => Promise<void>;
@@ -35,10 +38,25 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [viewingUserId, setViewingUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        try {
+          await setDoc(doc(db, 'users', currentUser.uid), {
+            uid: currentUser.uid,
+            email: currentUser.email,
+            name: currentUser.displayName || 'Trader',
+            lastLogin: new Date().toISOString(),
+            status: 'active',
+            joined: currentUser.metadata.creationTime || new Date().toISOString()
+          }, { merge: true });
+        } catch(e) {
+          console.error("Failed to sync user", e);
+        }
+      }
       setLoading(false);
     });
 
@@ -82,6 +100,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider value={{
       user,
       loading,
+      viewingUserId,
+      setViewingUserId,
       signInWithGoogle: () => handleSignIn(googleProvider),
       signInWithMicrosoft: () => handleSignIn(microsoftProvider),
       signInWithApple: () => handleSignIn(appleProvider),

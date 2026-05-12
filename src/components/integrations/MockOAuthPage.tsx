@@ -15,15 +15,12 @@ export function MockOAuthPage({ platform, onComplete, onCancel }: { platform: st
     if (!username || !password) return;
     setLoading(true);
     
-    setTimeout(() => {
-      setLoading(false);
-      if (username.toLowerCase() === platform.toLowerCase() && password.toLowerCase() === platform.toLowerCase()) {
+      setTimeout(() => {
+        setLoading(false);
+        // Accept any credentials for the demo
         toast.success(`Authorized securely with ${platformName}`);
         onComplete(`mock_code_${platform}_12345`);
-      } else {
-        toast.error(`Invalid credentials for ${platformName}`);
-      }
-    }, 1500);
+      }, 1500);
   };
 
   return (
@@ -44,8 +41,6 @@ export function MockOAuthPage({ platform, onComplete, onCancel }: { platform: st
            <div className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 mt-4">
               <Shield className="w-4 h-4" /> Secure OAuth Login
            </div>
-           
-           <p className="text-xs text-slate-400 mt-3 font-medium">✨ Use <strong className="text-slate-600 dark:text-slate-300">{platform.toLowerCase()}</strong> / <strong className="text-slate-600 dark:text-slate-300">{platform.toLowerCase()}</strong></p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

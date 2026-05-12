@@ -14,19 +14,20 @@ import { Payouts } from './components/payouts/Payouts';
 import { Customizer } from './components/customizer/Customizer';
 import { Sharing } from './components/sharing/Sharing';
 import { StudentDashboard } from './components/studentDashboard/StudentDashboard';
+import { AdminDashboard } from './components/admin/AdminDashboard';
 import { Settings } from './components/settings/Settings';
 import { LandingPage } from './components/landing/LandingPage';
 import { LoginPage } from './components/auth/LoginPage';
 import { PaymentPage } from './components/auth/PaymentPage';
 import { MockOAuthPage } from './components/integrations/MockOAuthPage';
 import { Tab } from './types';
-import { Menu, X, TrendingUp } from 'lucide-react';
+import { Menu, X, TrendingUp, EyeOff } from 'lucide-react';
 import { ThemeProvider } from './components/ThemeProvider';
 import { useAuth } from './context/AuthContext';
 import { Toaster } from 'sonner';
 
 export default function App() {
-  const { user, loading } = useAuth();
+  const { user, loading, viewingUserId, setViewingUserId } = useAuth();
   const [appMode, setAppMode] = useState<'landing' | 'app' | 'login'>('landing');
   const [currentTab, setCurrentTab] = useState<Tab>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -141,6 +142,24 @@ export default function App() {
         )}
 
         <main className="flex-1 overflow-y-auto bg-slate-100 dark:bg-[#0a0f18] p-4 md:p-8 relative">
+          {viewingUserId && (
+            <div className="mb-6 bg-rose-500/10 border border-rose-500/20 text-rose-500 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm animate-in fade-in duration-300">
+               <div className="flex items-center gap-2">
+                 <EyeOff className="w-5 h-5" />
+                 <span className="font-semibold text-sm">Viewing as User ID: <span className="font-mono text-rose-400">{viewingUserId}</span></span>
+               </div>
+               <button 
+                 onClick={() => {
+                   setViewingUserId(null);
+                   setCurrentTab('admin');
+                 }}
+                 className="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
+               >
+                 Stop Viewing
+               </button>
+            </div>
+          )}
+
           <div className="md:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => setAppMode('landing')}>
               <TrendingUp className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
@@ -183,6 +202,7 @@ export default function App() {
             {currentTab === 'customizer' && <Customizer />}
             {currentTab === 'sharing' && <Sharing />}
             {currentTab === 'student-dashboard' && <StudentDashboard />}
+            {currentTab === 'admin' && <AdminDashboard onTabSelect={setCurrentTab} />}
             {currentTab === 'settings' && <Settings />}
           </div>
         </main>
