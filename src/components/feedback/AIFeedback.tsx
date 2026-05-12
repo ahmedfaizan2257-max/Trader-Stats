@@ -42,7 +42,7 @@ export function AIFeedback() {
     try {
       // The AI Studio environment injects process.env.GEMINI_API_KEY through Vite
       // For external hosting (like Netlify), we use import.meta.env.VITE_GEMINI_API_KEY
-      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
+      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAV7X2iRO3FGkg2CSAO_MWquMeWWceBGLs';
       const ai = new GoogleGenAI({ apiKey });
       
       const prompt = `You are an expert trading coach. Analyze the following trading log and provide a detailed, constructive feedback report.
@@ -112,7 +112,7 @@ Keep it concise, professional, and actionable. Do not output anything outside of
     setChatHistory(newChatHistory);
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
+      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAV7X2iRO3FGkg2CSAO_MWquMeWWceBGLs';
       const ai = new GoogleGenAI({ apiKey });
       
       const contents = newChatHistory.map(msg => ({

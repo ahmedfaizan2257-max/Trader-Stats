@@ -52,7 +52,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
             <button onClick={() => handleNav('home', 'reviews')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">REVIEWS</button>
             <button onClick={() => handleNav('home', 'pricing')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">PRICING</button>
             <button onClick={() => handleNav('platforms')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">DIRECTORIES</button>
-            <button onClick={() => handleNav('blog')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">COMPANY</button>
+            <button onClick={() => handleNav('blog')} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">BLOG</button>
             {user ? (
               <button onClick={onEnter} className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest hover:text-[#5b32f6] transition-colors">DASHBOARD</button>
             ) : (
@@ -84,7 +84,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
             <button onClick={() => handleNav('home', 'reviews')} className="text-left text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">REVIEWS</button>
             <button onClick={() => handleNav('home', 'pricing')} className="text-left text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">PRICING</button>
             <button onClick={() => handleNav('platforms')} className="text-left text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">DIRECTORIES</button>
-            <button onClick={() => handleNav('blog')} className="text-left text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">COMPANY</button>
+            <button onClick={() => handleNav('blog')} className="text-left text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">BLOG</button>
             <button onClick={() => handleNav('login')} className="text-left text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">LOGIN</button>
           </div>
         )}
@@ -127,7 +127,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-slate-900 dark:text-white mb-4">Company</h4>
+            <h4 className="font-bold text-slate-900 dark:text-white mb-4">Blog</h4>
             <ul className="space-y-2 text-slate-600 dark:text-slate-400">
               <li><button onClick={() => handleNav('blog')} className="hover:text-[#5b32f6] transition-colors">Blog</button></li>
               <li><a href="#" className="hover:text-[#5b32f6] transition-colors">About Us</a></li>

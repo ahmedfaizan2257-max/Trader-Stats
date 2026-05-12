@@ -4,7 +4,7 @@ import { formatCurrency, cn } from '../../lib/utils';
 import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isAfter, subMonths, addMonths, startOfWeek, endOfWeek, isSameMonth } from 'date-fns';
 import { X, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 
 const EMOTIONS = [
   { emoji: '😊', label: 'Confident' },
@@ -192,6 +192,30 @@ export function Calendar() {
           <div className="h-[200px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="splitColorCal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset={
+                      (() => {
+                        if(chartData.length === 0) return 0;
+                        const max = Math.max(...chartData.map(d => d.cumulative));
+                        const min = Math.min(...chartData.map(d => d.cumulative));
+                        if (max <= 0) return 0;
+                        if (min >= 0) return 1;
+                        return max / (max - min);
+                      })()
+                    } stopColor="#10b981" stopOpacity={1} />
+                    <stop offset={
+                      (() => {
+                        if(chartData.length === 0) return 0;
+                        const max = Math.max(...chartData.map(d => d.cumulative));
+                        const min = Math.min(...chartData.map(d => d.cumulative));
+                        if (max <= 0) return 0;
+                        if (min >= 0) return 1;
+                        return max / (max - min);
+                      })()
+                    } stopColor="#ef4444" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
                 <XAxis 
                   dataKey="date" 
                   stroke="#888888" 
@@ -214,10 +238,10 @@ export function Calendar() {
                 <Line 
                   type="monotone" 
                   dataKey="cumulative" 
-                  stroke="#5b32f6" 
+                  stroke="url(#splitColorCal)" 
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 4, fill: "#5b32f6", stroke: "#000", strokeWidth: 2 }}
+                  activeDot={{ r: 4, fill: "#10b981", stroke: "#000", strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -255,8 +279,11 @@ export function Calendar() {
                 <Bar 
                   dataKey="dailyPnl" 
                   radius={[2, 2, 2, 2]}
-                  fill="#5b32f6"
-                />
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.dailyPnl > 0 ? '#10b981' : entry.dailyPnl < 0 ? '#ef4444' : '#5b32f6'} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

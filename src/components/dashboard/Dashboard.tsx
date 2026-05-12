@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTrades } from '../../context/TradeContext';
 import { formatCurrency, cn } from '../../lib/utils';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, subMonths, addMonths } from 'date-fns';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 import { 
   Info, Percent, Activity, Divide, Clock, 
   ArrowUpRight, ArrowDownRight, DollarSign, 
@@ -250,6 +250,28 @@ export function Dashboard() {
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset={
+                      (() => {
+                        const max = Math.max(...chartData.map(d => d.cumulative));
+                        const min = Math.min(...chartData.map(d => d.cumulative));
+                        if (max <= 0) return 0;
+                        if (min >= 0) return 1;
+                        return max / (max - min);
+                      })()
+                    } stopColor="#10b981" stopOpacity={1} />
+                    <stop offset={
+                      (() => {
+                        const max = Math.max(...chartData.map(d => d.cumulative));
+                        const min = Math.min(...chartData.map(d => d.cumulative));
+                        if (max <= 0) return 0;
+                        if (min >= 0) return 1;
+                        return max / (max - min);
+                      })()
+                    } stopColor="#ef4444" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
                 <XAxis 
                   dataKey="date" 
                   stroke="#555" 
@@ -272,7 +294,7 @@ export function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="cumulative" 
-                  stroke={themeColor} 
+                  stroke="url(#splitColor)" 
                   strokeWidth={2}
                   dot={false}
                   activeDot={{ r: 4, fill: themeColor, stroke: "#000", strokeWidth: 2 }}
@@ -313,9 +335,12 @@ export function Dashboard() {
                 <Bar 
                   dataKey="dailyPnl" 
                   radius={[2, 2, 2, 2]}
-                  fill={themeColor}
                   barSize={maxWinStreak > 30 ? 6 : undefined}
-                />
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.dailyPnl > 0 ? '#10b981' : entry.dailyPnl < 0 ? '#ef4444' : themeColor} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -451,8 +476,11 @@ export function Dashboard() {
                 <Bar 
                   dataKey="pnl" 
                   radius={[4, 4, 4, 4]}
-                  fill={themeColor}
-                />
+                >
+                  {ytdData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.pnl > 0 ? '#10b981' : entry.pnl < 0 ? '#ef4444' : themeColor} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
