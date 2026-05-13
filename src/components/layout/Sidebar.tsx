@@ -71,27 +71,6 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
         ))}
       </nav>
       
-      {/* 14 Day Free Trial Banner */}
-      <div className="p-4 mx-4 mb-4 bg-gradient-to-br from-[#5b32f6]/20 to-slate-900 border border-[#5b32f6]/30 rounded-xl relative overflow-hidden group cursor-pointer hover:border-[#5b32f6]/50 transition-colors">
-         <div className="absolute top-0 right-0 w-24 h-24 bg-[#5b32f6]/20 blur-xl rounded-full"></div>
-         <div className="relative z-10">
-            <div className="flex items-center gap-2 text-[#5b32f6] mb-1">
-               <Clock className="w-4 h-4" />
-               <span className="text-xs font-bold uppercase tracking-wider">Free Trial</span>
-            </div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2">14 days remaining</p>
-            <div className="w-full bg-slate-50 dark:bg-slate-950 h-1.5 rounded-full overflow-hidden mb-3">
-               <div className="bg-[#5b32f6] w-1/12 h-full rounded-full"></div>
-            </div>
-            <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-              Upgrade to Pro for unlimited gigabytes of cloud storage & unlimited accounts.
-            </p>
-            <button className="w-full bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold py-2 rounded-lg text-xs transition-colors">
-               Upgrade Plan
-            </button>
-         </div>
-      </div>
-
       <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
         <button 
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}

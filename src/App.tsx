@@ -21,7 +21,7 @@ import { LoginPage } from './components/auth/LoginPage';
 import { PaymentPage } from './components/auth/PaymentPage';
 import { MockOAuthPage } from './components/integrations/MockOAuthPage';
 import { Tab } from './types';
-import { Menu, X, TrendingUp, EyeOff } from 'lucide-react';
+import { Menu, X, TrendingUp, EyeOff, Clock } from 'lucide-react';
 import { ThemeProvider } from './components/ThemeProvider';
 import { useAuth } from './context/AuthContext';
 import { Toaster } from 'sonner';
@@ -48,7 +48,7 @@ export default function App() {
 
   useEffect(() => {
     if (user) {
-      const paidStr = localStorage.getItem(`hasPaid_${user.uid}`);
+      const paidStr = localStorage.getItem(`hasPaid_v2_${user.uid}`);
       if (paidStr === 'true') {
         setHasPaid(true);
       } else {
@@ -88,6 +88,12 @@ export default function App() {
       }
     }
   }, [user, loading, appMode, hasPaid]);
+
+  useEffect(() => {
+    const handleShowPayment = () => setShowPayment(true);
+    window.addEventListener('show-payment', handleShowPayment);
+    return () => window.removeEventListener('show-payment', handleShowPayment);
+  }, []);
 
   if (mockOAuthPlatform) {
     return (
@@ -142,6 +148,31 @@ export default function App() {
         )}
 
         <main className="flex-1 overflow-y-auto bg-slate-100 dark:bg-[#0a0f18] p-4 md:p-8 relative">
+          {!hasPaid && user && currentTab !== 'admin' && (
+            <div className="mb-6 bg-gradient-to-r from-[#5b32f6]/10 to-transparent border border-[#5b32f6]/20 dark:border-[#5b32f6]/30 px-4 py-3 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in duration-300">
+               <div className="flex items-center gap-3">
+                 <div className="p-2 bg-[#5b32f6]/20 rounded-lg">
+                   <Clock className="w-5 h-5 text-[#5b32f6]" />
+                 </div>
+                 <div>
+                   <h4 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                     Free Trial Active
+                     <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-[#5b32f6] text-white">
+                       {Math.max(0, 14 - Math.floor((new Date().getTime() - new Date(user.metadata.creationTime || new Date()).getTime()) / (1000 * 60 * 60 * 24)))} days left
+                     </span>
+                   </h4>
+                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Upgrade for unlimited records and AI pattern insights.</p>
+                 </div>
+               </div>
+               <button 
+                 onClick={() => setShowPayment(true)}
+                 className="w-full sm:w-auto px-4 py-2 bg-[#5b32f6] hover:bg-[#4a26d7] text-white rounded-lg text-sm font-bold transition-colors shadow-sm whitespace-nowrap"
+               >
+                 Upgrade Plan
+               </button>
+            </div>
+          )}
+
           {viewingUserId && (
             <div className="mb-6 bg-rose-500/10 border border-rose-500/20 text-rose-500 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm animate-in fade-in duration-300">
                <div className="flex items-center gap-2">
@@ -160,30 +191,23 @@ export default function App() {
             </div>
           )}
 
-          <div className="md:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="md:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => setAppMode('landing')}>
               <TrendingUp className="w-6 h-6 text-[#5b32f6]" strokeWidth={2.5} />
               <h1 className="text-xl font-bold tracking-tight text-[#5b32f6]">
                 TradeEdge
               </h1>
             </div>
-            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-slate-400 hover:text-slate-100">
+            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
                <Menu />
             </button>
           </div>
           
           <div className="max-w-7xl mx-auto pb-24">
-            {!hasPaid && user && (
-              <div className="w-full flex items-center justify-center gap-2 mb-8 text-sm text-slate-600 dark:text-slate-300">
-                 <span className="text-lg">🏳️</span> 
-                 You have {Math.max(0, 14 - Math.floor((new Date().getTime() - new Date(user.metadata.creationTime || new Date()).getTime()) / (1000 * 60 * 60 * 24)))} days left of your free trial
-                 <button onClick={() => setShowPayment(true)} className="text-emerald-500 hover:text-emerald-400 font-bold uppercase tracking-wide transition-colors">Subscribe Now</button>
-              </div>
-            )}
             
             {showPayment && (
               <PaymentPage onPay={() => {
-                localStorage.setItem(`hasPaid_${user?.uid}`, 'true');
+                localStorage.setItem(`hasPaid_v2_${user?.uid}`, 'true');
                 setHasPaid(true);
                 setShowPayment(false);
               }} />

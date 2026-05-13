@@ -139,8 +139,6 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-300 dark:border-slate-900 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
           <p>
             © 2026 TradeEdge. All rights reserved. 
-            <span className="mx-2">|</span> 
-            Developed by <a href="https://godesign.pk" target="_blank" rel="noreferrer" className="hover:text-[#5b32f6] transition-colors">GoDesign Technologies LLP</a>
           </p>
           <div className="flex gap-6">
             <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#5b32f6]"></div> System Operational</span>

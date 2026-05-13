@@ -17,6 +17,8 @@ export function Dashboard() {
   const themeColor = customSettings?.hexColor || '#5b32f6';
   const { user } = useAuth();
   
+  const hasPaid = user ? localStorage.getItem(`hasPaid_${user.uid}`) === 'true' : false;
+  
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
 
   const [showFilters, setShowFilters] = useState(false);
