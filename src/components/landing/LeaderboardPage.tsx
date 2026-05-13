@@ -16,7 +16,7 @@ export function LeaderboardPage() {
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Global <span className="text-[#5b32f6]">Leaderboard</span>.</h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          See how you stack up against the best. Top performers based on verified trade executions and consistent risk management.
+          Compare your metrics with top achievers. Rankings are calculated automatically utilizing verified execution history and stringent risk parameters.
         </p>
       </div>
 
@@ -26,7 +26,7 @@ export function LeaderboardPage() {
             <thead className="bg-white dark:bg-[#18181b] border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Rank</th>
-                <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Trader</th>
+                <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Member</th>
                 <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Win Rate</th>
                 <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Profit Factor</th>
                 <th className="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Monthly P&L</th>

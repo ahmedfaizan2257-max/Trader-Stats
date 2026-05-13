@@ -179,7 +179,7 @@ export function DashboardMock({ variant = 'hero' }: { variant?: 'hero' | 'perfor
                    Successes this month
                  </div>
                  <div className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pl-3.5">
-                   You demonstrated excellent ability to identify and capitalize on strong trending moves, particularly on May 6th with MNQM6. Your capacity to scale into winning positions (Trades 5-8) and maximize profit from a single directional move is a significant strength. This single day's performance contributed substantially to your overall profitability.
+                   You exhibited exceptional skill in riding established trends, notably during the breakout on May 6th. Your ability to methodically pyramid into profitable setups (Positions 5-8) and extract maximum value from a unidirectional push is a major asset. This specific session accounted for the majority of your net profit.
                  </div>
                </motion.div>
 
@@ -195,9 +195,9 @@ export function DashboardMock({ variant = 'hero' }: { variant?: 'hero' | 'perfor
                    Key challenges & weaknesses
                  </div>
                  <div className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pl-3.5 space-y-2">
-                   <p><strong className="text-slate-900 dark:text-slate-100 font-semibold">Inconsistent Directional Bias on Short Trades:</strong> You struggled significantly with short trades, especially on MNQM6 on May 5th and MGCM6 on May 7th, leading to substantial losses. This suggests a potential misreading of market direction or attempting to fade strong trends without sufficient confirmation.</p>
-                   <p><strong className="text-slate-900 dark:text-slate-100 font-semibold">Lack of Trade Journaling:</strong> The complete absence of notes for any trade is a critical weakness. Without documenting your rationale, emotions, and lessons learned, it's nearly impossible to systematically identify patterns, refine your strategy, or grow as a trader.</p>
-                   <p><strong className="text-slate-900 dark:text-slate-100 font-semibold">Inconsistent Risk Management:</strong> While some losses were small, others were quite large (e.g., -447.5, -250). This indicates a lack of consistent stop-loss placement or adherence, especially when trades move against your initial bias.</p>
+                   <p><strong className="text-slate-900 dark:text-slate-100 font-semibold">Struggling with Directional Bias on Drawdowns:</strong> You faced substantial headwinds holding short positions, particularly during counter-trend setups on the 5th and 7th. This indicates a potential issue with reading higher-timeframe momentum and attempting to catch falling knives.</p>
+                   <p><strong className="text-slate-900 dark:text-slate-100 font-semibold">Missing Log Entries:</strong> The lack of context and metadata attached to your executions is a major issue. Failing to record emotional state and technical setup criteria prevents meaningful pattern recognition over time.</p>
+                   <p><strong className="text-slate-900 dark:text-slate-100 font-semibold">Erratic Stop Losses:</strong> While some drawdowns were aggressively capped, others ballooned to outsized figures. This points to a failure to adhere to hard stops once your original thesis was invalidated.</p>
                  </div>
                </motion.div>
 
@@ -213,7 +213,7 @@ export function DashboardMock({ variant = 'hero' }: { variant?: 'hero' | 'perfor
                    Actionable improvement steps
                  </div>
                  <div className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pl-3.5">
-                   <strong className="text-slate-900 dark:text-slate-100 font-semibold">Implement a Detailed Pre-Trade Plan & Journaling Routine:</strong> For every single trade, define your entry criteria, target, and <em className="text-[#FF5F56] not-italic font-semibold">strict stop-loss</em> before execution. Immediately after, record comprehensive notes on your execution...
+                   <strong className="text-slate-900 dark:text-slate-100 font-semibold">Enforce a Strict Preparation Protocol:</strong> Prior to any entry, explicitly outline your setup conditions, take-profit levels, and <em className="text-[#FF5F56] not-italic font-semibold">hard out</em> before firing. Directly afterwards, compile thorough notes detailing...
                  </div>
                </motion.div>
             </div>

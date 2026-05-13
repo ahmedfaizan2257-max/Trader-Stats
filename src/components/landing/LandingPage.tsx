@@ -110,7 +110,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
               </span>
             </div>
             <p className="text-slate-600 dark:text-slate-400 max-w-sm mb-6">
-              The ultimate trading journal and analytics platform. Built by traders, for traders. Use our AI to find your edge and stop bleeding money.
+              The premier logging and analytics dashboard. Constructed by professionals, for professionals. Utilize machine learning to discover your advantage and prevent capital loss.
             </p>
             <div className="flex gap-4 text-slate-500">
               <a href="#" className="hover:text-slate-900 dark:text-white transition-colors"><Twitter className="w-5 h-5" /></a>
@@ -190,20 +190,20 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h1 className="text-5xl md:text-[4rem] lg:text-[5rem] font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-            Take <span className="text-emerald-600 dark:text-[#00FC9E]">Control</span> of Your<br />
-            Trading.
+            Master Your <span className="text-emerald-600 dark:text-[#00FC9E]">Edge</span> in the<br />
+            Markets.
           </h1>
           <p className="text-xl md:text-2xl text-slate-800 dark:text-slate-200 max-w-[600px] mx-auto lg:mx-0 leading-normal mt-8">
-            Traderstats helps you track, analyze, and improve your trading performance.
+            TradeEdge empowers you to monitor, evaluate, and refine your market strategies effortlessly.
           </p>
           
           <ul className="mt-12 space-y-7 text-left max-w-[600px] mx-auto lg:mx-0">
             {[
-              "Track trades from unlimited accounts",
-              "Supports all major futures prop firm trading platforms",
-              "See all your trades plotted in TradingView for easy review",
-              "Easy trade journaling and detailed performance metrics",
-              "Share your trades and performance calendar with your community and friends"
+              "Log executions across multiple brokerages effortlessly",
+              "Compatible with leading proprietary firm platforms",
+              "Visualize your entries directly on interactive charts",
+              "Seamless journaling paired with deep analytics",
+              "Export and display your progress with your community"
             ].map((text, i) => (
               <motion.li 
                 key={i} 
@@ -290,38 +290,38 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
       <section id="features" className="py-24 bg-slate-50 dark:bg-[#09090b] border-t border-slate-300 dark:border-slate-900">
         <motion.div {...fadeUpOpts} className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-[#5b32f6] font-bold tracking-wide uppercase text-sm mb-3">Powerful Features for Traders</h2>
-            <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">All you need to improve.</h3>
+            <h2 className="text-[#5b32f6] font-bold tracking-wide uppercase text-sm mb-3">Elevate Your Execution</h2>
+            <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Everything required to scale.</h3>
           </div>
 
           <div className="space-y-32">
             <FeatureSection 
-              title="Get AI Feedback"
-              description="Learn from artificial intelligence exactly what you are doing right and what you are doing wrong. Our AI analyzes your trade history to highlight your weaknesses and find your edge."
+              title="Unlock AI Insights"
+              description="Harness artificial intelligence to discover patterns in your behavior. Our system reviews your history to pinpoint leaks and reinforce your strengths."
               icon={<Brain className="w-6 h-6 text-[#5b32f6]" />}
               visual={<DashboardMock variant="feedback" />}
               reverse={false}
             />
 
             <FeatureSection 
-              title="Track Your Performance"
-              description="Get powerful insights on your trading strategy. With our advanced statistics, equity curves, calendar views, and heatmaps you will always know what is working."
+              title="Monitor Your Progress"
+              description="Access profound metrics regarding your approach. Through comprehensive data, dynamic curves, and intuitive calendars, you'll constantly understand your performance."
               icon={<BarChart3 className="w-6 h-6 text-[#5b32f6]" />}
               visual={<DashboardMock variant="performance" />}
               reverse={true}
             />
 
             <FeatureSection 
-              title="Review your trades with TradingView"
-              description="Review your exact entry and exits visually on interactive charts right from your trading journal. Never switch contexts to see what the market was doing against your execution."
+              title="Interactive Chart Review"
+              description="Examine your positioning directly on visual diagrams without leaving your diary. Avoid context switching by seeing exactly how price reacted to your execution."
               icon={<LineChart className="w-6 h-6 text-[#5b32f6]" />}
               visual={<DashboardMock variant="chart" />}
               reverse={false}
             />
 
             <FeatureSection 
-              title="Write in your journal"
-              description="Consistency starts with accountability. Log your setups, emotional state, and rules out every single day."
+              title="Document Everything"
+              description="Discipline begins with documentation. Record your emotional state, strategic setups, and daily rules to maintain peak accountability."
               icon={<BookOpen className="w-6 h-6 text-[#5b32f6]" />}
               visual={<DashboardMock variant="journal" />}
               reverse={true}
@@ -333,8 +333,8 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
       <section id="reviews" className="py-24 bg-slate-50 dark:bg-[#010101] border-t border-slate-300 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div {...fadeUpOpts} className="text-center mb-20">
-            <h2 className="text-[#5b32f6] font-bold tracking-wide uppercase text-sm mb-3">WHAT TRADERS ARE SAYING</h2>
-            <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Don't just take our word for it.</h3>
+            <h2 className="text-[#5b32f6] font-bold tracking-wide uppercase text-sm mb-3">COMMUNITY FEEDBACK</h2>
+            <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Hear from our members.</h3>
           </motion.div>
 
           <motion.div {...staggerOpts} className="grid md:grid-cols-3 gap-6">
@@ -342,7 +342,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
               <ReviewCard
                 author="Alex Rodriguez"
                 role="Funded Proprietary Trader"
-                content="TradeEdge completely changed how I review my trading. Before, I was using messy spreadsheets. Now the AI points out exactly where I leak money. Highly recommend!"
+                content="TradeEdge radically transformed my review process. I used to rely on scattered spreadsheets. Now, the platform pinpoints exactly where my capital drops. An absolute must-have!"
                 image="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 rating={5}
               />
@@ -351,7 +351,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
               <ReviewCard
                 author="Sarah Jenkins"
                 role="Independent Day Trader"
-                content="The TradingView integration is a game changer for my reviews. Being able to see my executions right on the chart without opening my broker saves me hours every weekend."
+                content="The integrated chart display is revolutionary for my post-session breakdowns. Viewing my positions applied to the candlestick flow without accessing my broker cuts my weekend work in half."
                 image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 rating={5}
               />
@@ -360,7 +360,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
               <ReviewCard
                 author="Michael Chen"
                 role="Swing Trader"
-                content="Finally, a journal that isn't clunky. Fast, beautiful, and gives me exactly the metrics I need. I realized I was losing most of my profits on Thursdays and adjusted my plan."
+                content="At last, a diary that functions smoothly. Lightning-fast, gorgeous interface, and provides the exact numbers I require. I discovered I was giving back gains on Thursdays and pivoted my approach."
                 image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 rating={5}
               />
@@ -369,7 +369,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
               <ReviewCard
                 author="David Torres"
                 role="Crypto Trader"
-                content="I've tried almost every journaling tool out there, and TradeEdge is by far the cleanest. The setup tracking helped me figure out my most profitable edge."
+                content="I have experimented with nearly every logging software available, and TradeEdge is undeniably the most refined. The tag categorization enabled me to isolate my truly profitable models."
                 image="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 rating={4}
               />
@@ -378,7 +378,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
               <ReviewCard
                 author="Jessica Wu"
                 role="Options Trader"
-                content="The risk/reward metrics and heatmaps are incredible. It visualizes my performance in a way that actually makes sense. Worth every penny."
+                content="The expectancy statistics and visual heat grids are phenomenal. It translates my raw data into a coherent narrative that genuinely makes sense. Unbelievable value."
                 image="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 rating={5}
               />
@@ -387,7 +387,7 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
               <ReviewCard
                 author="Kevin Patel"
                 role="Forex Trader"
-                content="Super clean UI. I log my trades immediately after closing them now because it's so quick. The AI insights alone have paid for my subscription ten times over."
+                content="Immaculate design language. I record my setups instantly after unwinding them because the process is entirely frictionless. The automated coaching has easily justified the cost indefinitely."
                 image="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 rating={5}
               />
@@ -400,47 +400,47 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div {...fadeUpOpts} className="text-center mb-20">
             <h2 className="text-[#5b32f6] font-bold tracking-wide uppercase text-sm mb-3">Pricing</h2>
-            <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Simple, transparent pricing.</h3>
-            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Start for free. Upgrade when you need more power.</p>
+            <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Clear, straightforward tiers.</h3>
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Begin at no cost. Scale up when you require advanced features.</p>
           </motion.div>
 
           <motion.div {...staggerOpts} className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <motion.div {...childFadeUpOpts} className="bg-slate-50 dark:bg-[#09090b] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 lg:p-12 hover:border-[#5b32f6]/30 transition-colors">
-              <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Basic</h4>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">For beginners just starting out.</p>
+              <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Starter</h4>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">Perfect for those just getting their feet wet.</p>
               <div className="mb-8">
                 <span className="text-5xl font-extrabold text-slate-900 dark:text-white">$0</span>
                 <span className="text-slate-500">/mo</span>
               </div>
               <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Up to 50 trades / month</li>
-                <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Basic Dashboard Stats</li>
-                <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> CSV Imports</li>
+                <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Up to 50 executions / month</li>
+                <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Essential metrics dashboard</li>
+                <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Spreadsheet imports</li>
               </ul>
               <button onClick={onEnter} className="w-full py-4 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-900 dark:text-white font-bold transition-colors">
-                Start Free
+                Begin Exploring
               </button>
             </motion.div>
 
             <motion.div {...childFadeUpOpts} className="bg-white dark:bg-[#18181b] border-2 border-[#5b32f6] rounded-3xl p-8 lg:p-12 relative shadow-[0_0_40px_rgba(91,50,246,0.1)]">
               <div className="absolute top-0 right-8 transform -translate-y-1/2">
-                <span className="bg-[#5b32f6] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</span>
+                <span className="bg-[#5b32f6] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Top Choice</span>
               </div>
-              <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Pro</h4>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">For serious funded and retail traders.</p>
+              <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Elite</h4>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">For dedicated participants and funded professionals.</p>
               <div className="mb-8">
                 <span className="text-5xl font-extrabold text-slate-900 dark:text-white">$24</span>
                 <span className="text-slate-500">/mo</span>
               </div>
               <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Unlimited Trading Logs</li>
-                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> AI Trading Coach & Insights</li>
-                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> TradingView Chart Integration</li>
-                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Advanced Analytics & Heatmaps</li>
-                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Auto-sync with 15+ Brokers</li>
+                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Infinite trade logging</li>
+                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> AI Mentorship & Pattern Recognition</li>
+                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Integrated Chart Overlays</li>
+                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Comprehensive Visual Heatgrids</li>
+                <li className="flex items-center gap-3 text-slate-900 dark:text-white"><CheckCircle2 className="w-5 h-5 text-[#5b32f6]" /> Direct integrations with major brokers</li>
               </ul>
               <button onClick={onEnter} className="w-full py-4 rounded-xl bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold transition-all shadow-[0_0_20px_rgba(91,50,246,0.3)]">
-                Start 14-Day Free Trial
+                Claim 14-Day Free Access
               </button>
             </motion.div>
           </motion.div>
@@ -456,24 +456,24 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
           </motion.div>
           <div className="space-y-4">
             <FaqItem 
-              question="Does Traderstats support my prop firm?"
-              answer="Yes! We seamlessly support trades exported or synced from Topstep, TradeDay, Apex Trader Funding, MyFundedFutures, and natively integrate with Tradovate, NinjaTrader, and Rithmic."
+              question="Does TradeEdge support my funding company?"
+              answer="Absolutely! We flawlessly integrate with major proprietary funding programs, natively supporting popular API endpoints."
             />
             <FaqItem 
-              question="Can I auto-sync my trades?"
-              answer="Absolutely. You can link your supported brokerages via API or OAuth, and your trades will automatically sync to your dashboard in minutes."
+              question="Can I automatically pull my data?"
+              answer="Yes. By connecting your credentials securely via OAuth, your executions push straight into your secure vault instantly."
             />
             <FaqItem 
-              question="Is my data and broker account secure?"
-              answer="Yes. We use read-only API connections. This mathematically prevents us (or anyone else) from withdrawing your funds or placing trades on your behalf. Additionally, we use bank-level encryption to store your tracking data."
+              question="Is my account information protected?"
+              answer="We deploy read-only endpoints exclusively. This establishes a mathematical barrier preventing any external modifications or withdrawals. Furthermore, 256-bit encryption safeguards your history."
             />
             <FaqItem 
-              question="Do I need a credit card for the free trial?"
-              answer="Nope! You can jump on our 14-day free trial of the Pro version without entering any payment info. If you choose not to upgrade, your account safely reverts to the free tier."
+              question="Is a credit card required for the trial?"
+              answer="Not at all! You can dive straight into our two-week evaluation phase without submitting any billing info. If you decide to stay on the free tier, no action is needed."
             />
             <FaqItem 
-              question="Can I export my data later if I want to?"
-              answer="Always. This is your data. You can easily export your entire trading history, analytics, and journal to a CSV file at any time."
+              question="Can I download my metrics later on?"
+              answer="Of course. Your data belongs to you. You are free to pull all activity, calculations, and notes into localized formats whenever you wish."
             />
           </div>
         </div>
@@ -482,13 +482,13 @@ function HomeContent({ onEnter }: { onEnter: () => void }) {
       <section className="py-24 bg-gradient-to-b from-[#09090b] to-[#000000] border-t border-slate-300 dark:border-slate-900 border-b relative overflow-hidden">
         <div className="absolute inset-0 bg-[#5b32f6]/5 blur-[100px] rounded-full transform translate-y-1/2"></div>
         <motion.div {...fadeUpOpts} className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <h3 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-8 tracking-tight">Stop guessing. Start tracking.</h3>
+          <h3 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-8 tracking-tight">Stop speculating. Start measuring.</h3>
           <p className="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto">
-            Take Control of Your Trading. Join thousands of traders tracking their edge. 
-            No credit card required to start.
+            Take command of your portfolio. Join thousands of users logging their advantage. 
+            No payment details required to try.
           </p>
           <button onClick={onEnter} className="px-10 py-5 bg-[#5b32f6] hover:bg-[#4a26d7] text-white rounded-2xl font-bold text-xl shadow-[0_0_30px_rgba(91,50,246,0.4)] transition-all flex items-center justify-center gap-3 mx-auto">
-            Start improving for free <ArrowRight className="w-6 h-6" />
+            Get Started Now <ArrowRight className="w-6 h-6" />
           </button>
         </motion.div>
       </section>

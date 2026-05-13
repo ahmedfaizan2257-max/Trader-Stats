@@ -4,9 +4,9 @@ export function PlatformsPage() {
   return (
     <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-[80vh] flex flex-col items-center">
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Supported <span className="text-[#5b32f6]">Platforms</span>.</h1>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Integrated <span className="text-[#5b32f6]">Connections</span>.</h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          Seamlessly connect your trading accounts. TradeEdge supports a wide range of platforms to automatically sync and analyze your executions.
+          Effortlessly attach your brokerages. TradeEdge works with the industry's most popular software to pull and evaluate your history instantly.
         </p>
       </div>
       

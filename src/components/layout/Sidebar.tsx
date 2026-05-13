@@ -1,12 +1,14 @@
-import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share, Sparkles, Shield } from 'lucide-react';
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share, Sparkles, Shield, Sun, Moon } from 'lucide-react';
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
+import { useTheme } from '../ThemeProvider';
 
 import { useAuth } from '../../context/AuthContext';
 import { LogOut } from 'lucide-react';
 
 export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, onTabSelect: (val: Tab) => void, onBack?: () => void }) {
   const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -91,6 +93,13 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
       </div>
 
       <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
+        <button 
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="flex items-center justify-center gap-2 w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold transition-colors"
+        >
+          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        </button>
         <button 
           onClick={async () => {
              try {
