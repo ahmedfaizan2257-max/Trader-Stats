@@ -16,6 +16,7 @@ import { Sharing } from './components/sharing/Sharing';
 import { StudentDashboard } from './components/studentDashboard/StudentDashboard';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { Settings } from './components/settings/Settings';
+import { TradeWithUs } from './components/tradeWithUs/TradeWithUs';
 import { LandingPage } from './components/landing/LandingPage';
 import { LoginPage } from './components/auth/LoginPage';
 import { PaymentPage } from './components/auth/PaymentPage';
@@ -213,10 +214,16 @@ export default function App() {
               }} />
             )}
 
-            {currentTab === 'dashboard' && <Dashboard />}
+            {currentTab === 'dashboard' && <Dashboard onNavigateToLog={(date) => {
+              sessionStorage.setItem('highlight_trade_date', date);
+              setCurrentTab('log');
+            }} />}
             {currentTab === 'log' && <TradeLog />}
             {currentTab === 'goals' && <Goals />}
-            {currentTab === 'calendar' && <Calendar />}
+            {currentTab === 'calendar' && <Calendar onNavigateToLog={(date) => {
+              sessionStorage.setItem('highlight_trade_date', date);
+              setCurrentTab('log');
+            }} />}
             {currentTab === 'feedback' && <AIFeedback />}
             {currentTab === 'journal' && <Journal />}
             {currentTab === 'analytics' && <Analytics />}
@@ -225,6 +232,7 @@ export default function App() {
             {currentTab === 'payouts' && <Payouts />}
             {currentTab === 'customizer' && <Customizer />}
             {currentTab === 'sharing' && <Sharing />}
+            {currentTab === 'trade-with-us' && <TradeWithUs />}
             {currentTab === 'student-dashboard' && <StudentDashboard />}
             {currentTab === 'admin' && <AdminDashboard onTabSelect={setCurrentTab} />}
             {currentTab === 'settings' && <Settings />}

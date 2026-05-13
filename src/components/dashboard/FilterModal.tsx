@@ -6,9 +6,23 @@ interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
   onReset: () => void;
+  accountFilter: string;
+  setAccountFilter: (val: string) => void;
+  directionFilter: string;
+  setDirectionFilter: (val: string) => void;
+  instrumentFilter: string;
+  setInstrumentFilter: (val: string) => void;
+  uniqueAccounts: string[];
+  uniqueInstruments: string[];
 }
 
-export function FilterModal({ isOpen, onClose, onReset }: FilterModalProps) {
+export function FilterModal({ 
+  isOpen, onClose, onReset,
+  accountFilter, setAccountFilter,
+  directionFilter, setDirectionFilter,
+  instrumentFilter, setInstrumentFilter,
+  uniqueAccounts, uniqueInstruments
+}: FilterModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -32,7 +46,9 @@ export function FilterModal({ isOpen, onClose, onReset }: FilterModalProps) {
               <h2 className="text-2xl font-bold font-sans tracking-tight text-white">Filters</h2>
               <div className="flex items-center gap-6">
                 <button 
-                  onClick={onReset}
+                  onClick={() => {
+                    onReset();
+                  }}
                   className="text-sm font-semibold text-slate-300 hover:text-white transition-colors"
                 >
                   Reset all
@@ -47,40 +63,63 @@ export function FilterModal({ isOpen, onClose, onReset }: FilterModalProps) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Date Range */}
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Date Range</label>
-                <button className="flex items-center gap-3 px-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 justify-start w-full md:w-4/5">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  May 1, 2026 - May 31, 2026
-                </button>
-              </div>
-
               {/* Direction */}
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Direction</label>
-                <button className="flex items-center gap-3 px-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 justify-start w-full md:w-4/5">
-                  <ArrowRightLeft className="w-4 h-4 text-slate-400" />
-                  All directions
-                </button>
+                <div className="relative w-full md:w-4/5">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <ArrowRightLeft className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <select 
+                    value={directionFilter}
+                    onChange={(e) => setDirectionFilter(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 focus:outline-none focus:border-[#5b32f6] appearance-none"
+                  >
+                    <option value="All">All directions</option>
+                    <option value="Long">Long</option>
+                    <option value="Short">Short</option>
+                  </select>
+                </div>
               </div>
 
               {/* Accounts & Tags */}
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Accounts & Tags</label>
-                <button className="flex items-center gap-3 px-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 justify-start w-full md:w-1/2">
-                  <Tags className="w-4 h-4 text-slate-400" />
-                  Accounts
-                </button>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Accounts</label>
+                <div className="relative w-full md:w-4/5">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <Tags className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <select 
+                    value={accountFilter}
+                    onChange={(e) => setAccountFilter(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 focus:outline-none focus:border-[#5b32f6] appearance-none"
+                  >
+                    <option value="All">All Accounts</option>
+                    {uniqueAccounts.map(acc => (
+                      <option key={acc} value={acc}>{acc}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Instruments */}
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Instruments</label>
-                <button className="flex items-center gap-3 px-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 justify-start w-full md:w-1/2">
-                  <Activity className="w-4 h-4 text-slate-400" />
-                  Instruments
-                </button>
+                <div className="relative w-full md:w-4/5">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <Activity className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <select 
+                    value={instrumentFilter}
+                    onChange={(e) => setInstrumentFilter(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 bg-[#18181b] hover:bg-[#27272a] border border-slate-800 rounded-xl transition-colors text-sm font-semibold text-slate-200 focus:outline-none focus:border-[#5b32f6] appearance-none"
+                  >
+                    <option value="All">All Instruments</option>
+                    {uniqueInstruments.map(inst => (
+                      <option key={inst} value={inst}>{inst}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
             
@@ -93,7 +132,7 @@ export function FilterModal({ isOpen, onClose, onReset }: FilterModalProps) {
               </button>
               <button 
                 onClick={onClose}
-                className="px-6 py-2 rounded-xl bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold transition-colors"
+                className="px-6 py-2 rounded-xl bg-[#5b32f6] hover:bg-[#4a26d7] text-white font-bold transition-colors shadow-[0_0_15px_rgba(91,50,246,0.3)]"
               >
                 Apply Filters
               </button>

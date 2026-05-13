@@ -2,24 +2,21 @@ import { useState } from 'react';
 import { useTrades } from '../../context/TradeContext';
 import { formatCurrency, cn } from '../../lib/utils';
 import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isAfter, subMonths, addMonths, startOfWeek, endOfWeek, isSameMonth } from 'date-fns';
-import { X, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
+import { DailyPerformanceView } from './DailyPerformanceView';
 
-const EMOTIONS = [
-  { emoji: '😊', label: 'Confident' },
-  { emoji: '😐', label: 'Neutral' },
-  { emoji: '😤', label: 'Frustrated' },
-  { emoji: '😰', label: 'Anxious' },
-  { emoji: '🎯', label: 'Focused' },
-];
-
-export function Calendar() {
-  const { trades, journalEntries, addJournalEntry } = useTrades();
+export function Calendar({ onNavigateToLog }: { onNavigateToLog?: (date: string) => void }) {
+  const { trades, journalEntries } = useTrades();
   const { user } = useAuth();
   
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
-  const [selectedJournalDate, setSelectedJournalDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  if (selectedDate) {
+    return <DailyPerformanceView date={selectedDate} onBack={() => setSelectedDate(null)} />;
+  }
 
   // Calendar Logic
   const monthStart = startOfMonth(currentMonth);
@@ -143,7 +140,7 @@ export function Calendar() {
             return (
               <div 
                 key={day.toISOString()} 
-                onClick={() => setSelectedJournalDate(day)}
+                onClick={() => setSelectedDate(day)}
                 className={cn(
                   "min-h-[100px] sm:min-h-[140px] p-2 sm:p-3 relative flex flex-col transition-all cursor-pointer group border-t border-slate-200 dark:border-slate-800",
                   bgClass,
@@ -256,7 +253,18 @@ export function Calendar() {
           </div>
           <div className="h-[200px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+              <BarChart 
+                data={chartData} 
+                margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+                onClick={(state) => {
+                  if (state && state.activePayload && state.activePayload.length > 0) {
+                    const rawDate = state.activePayload[0].payload.fullDate;
+                    if (rawDate && onNavigateToLog) {
+                      onNavigateToLog(rawDate);
+                    }
+                  }
+                }}
+              >
                 <XAxis 
                   dataKey="date" 
                   stroke="#888888" 
@@ -303,12 +311,6 @@ export function Calendar() {
         </div>
       </div>
 
-      {selectedJournalDate && (
-        <JournalModal 
-          date={selectedJournalDate} 
-          onClose={() => setSelectedJournalDate(null)} 
-        />
-      )}
     </div>
   );
 }
@@ -319,114 +321,6 @@ function StatCard({ label, value, highlight }: { label: string, value: string, h
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl flex flex-col items-start shadow-sm">
       <span className="text-xs font-medium text-slate-500 uppercase tracking-widest">{label}</span>
       <span className={cn("text-2xl font-bold mt-1 font-mono tracking-tight", colorClass)}>{value}</span>
-    </div>
-  );
-}
-
-function JournalModal({ date, onClose }: { date: Date, onClose: () => void }) {
-  const { journalEntries, addJournalEntry } = useTrades();
-  const dateStr = format(date, 'yyyy-MM-dd');
-  
-  const currentEntry = journalEntries.find(e => e.date === dateStr) || {
-    id: crypto.randomUUID(),
-    date: dateStr,
-    notes: '',
-    emotion: '😐',
-    followedPlan: 'Partial' as const
-  };
-
-  const [notes, setNotes] = useState(currentEntry.notes);
-  const [emotion, setEmotion] = useState(currentEntry.emotion);
-  const [followedPlan, setFollowedPlan] = useState<'Yes'|'No'|'Partial'>(currentEntry.followedPlan);
-
-  const handleSave = () => {
-    addJournalEntry({
-      id: currentEntry.id,
-      date: dateStr,
-      notes,
-      emotion,
-      followedPlan
-    });
-    onClose();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-2xl relative z-10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex justify-between items-center p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
-          <h3 className="text-xl font-semibold">Journal for {format(date, 'MMMM do, yyyy')}</h3>
-          <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors"><X className="w-5 h-5" /></button>
-        </div>
-        
-        <div className="p-6 overflow-y-auto flex-1 space-y-6">
-          <div>
-            <label className="block text-sm font-semibold mb-3">Dominant Emotion</label>
-            <div className="flex flex-wrap gap-2">
-              {EMOTIONS.map(emo => (
-                <button
-                  key={emo.label}
-                  onClick={() => setEmotion(emo.emoji)}
-                  className={cn(
-                    "flex flex-col items-center gap-1 p-2 sm:p-3 rounded-xl border transition-all flex-1 min-w-[70px]",
-                    emotion === emo.emoji 
-                      ? "bg-slate-100 dark:bg-slate-800 border-[#5b32f6]/50 shadow-sm" 
-                      : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-slate-600 opacity-60 hover:opacity-100"
-                  )}
-                >
-                  <span className="text-xl sm:text-2xl">{emo.emoji}</span>
-                  <span className={cn("text-[9px] sm:text-[10px] font-medium uppercase tracking-wider", emotion === emo.emoji ? "text-[#5b32f6]" : "text-slate-500")}>
-                    {emo.label}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold mb-3">Did you follow your trading plan?</label>
-            <div className="flex gap-3">
-              {(['Yes', 'Partial', 'No'] as const).map(opt => {
-                let colorClass = "border-slate-200 dark:border-slate-800";
-                if (followedPlan === opt) {
-                  if (opt === 'Yes') colorClass = "border-green-500/50 bg-green-500/10 text-green-500";
-                  if (opt === 'Partial') colorClass = "border-yellow-500/50 bg-yellow-500/10 text-yellow-500";
-                  if (opt === 'No') colorClass = "border-red-500/50 bg-red-500/10 text-red-500";
-                }
-                
-                return (
-                  <button
-                    key={opt}
-                    onClick={() => setFollowedPlan(opt)}
-                    className={cn(
-                      "flex-1 py-3 rounded-xl border font-bold text-sm transition-all",
-                      followedPlan === opt ? colorClass : "bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:border-slate-600"
-                    )}
-                  >
-                    {opt}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold mb-3">Reflections & Notes</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="What did you see in the market today? How did you execute? What could be improved?"
-              rows={6}
-              className="w-full bg-slate-50 dark:bg-[#09090b] border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm focus:outline-none focus:border-[#5b32f6] resize-none"
-            />
-          </div>
-        </div>
-
-        <div className="p-5 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-950/50">
-          <button onClick={onClose} className="px-5 py-2.5 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">Cancel</button>
-          <button onClick={handleSave} className="px-6 py-2.5 bg-[#5b32f6] hover:bg-[#4a26d7] text-white rounded-xl font-bold shadow-md transition-colors">Save Journal</button>
-        </div>
-      </div>
     </div>
   );
 }

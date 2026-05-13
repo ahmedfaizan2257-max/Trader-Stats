@@ -1,4 +1,4 @@
-import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share, Sparkles, Shield, Sun, Moon } from 'lucide-react';
+import { Briefcase, LayoutDashboard, LineChart, MessageSquare, BookOpen, ChevronDown, ChevronRight, Clock, ArrowLeft, Link2, TrendingUp, Calendar as CalendarIcon, Target, Wallet, DollarSign, Paintbrush, Share2, List, GraduationCap, Settings, BarChart3, SquarePen, Zap, ClipboardList, Share, Sparkles, Shield, Sun, Moon, Bot } from 'lucide-react';
 import { Tab } from '../../types';
 import { cn } from '../../lib/utils';
 import { useTheme } from '../ThemeProvider';
@@ -12,6 +12,7 @@ export function Sidebar({ currentTab, onTabSelect, onBack }: { currentTab: Tab, 
   
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'trade-with-us', label: 'Trade With Us', icon: Bot },
     { id: 'integrations', label: 'Integrations', icon: Link2 },
     { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
     { id: 'goals', label: 'Goals', icon: Target },

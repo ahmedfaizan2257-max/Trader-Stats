@@ -31,7 +31,7 @@ export interface TradingAccount {
   createdAt: string;
 }
 
-export type Tab = 'dashboard' | 'log' | 'feedback' | 'journal' | 'analytics' | 'calendar' | 'integrations' | 'goals' | 'accounts' | 'payouts' | 'customizer' | 'sharing' | 'student-dashboard' | 'settings' | 'admin';
+export type Tab = 'dashboard' | 'log' | 'feedback' | 'journal' | 'analytics' | 'calendar' | 'integrations' | 'goals' | 'accounts' | 'payouts' | 'customizer' | 'sharing' | 'student-dashboard' | 'settings' | 'admin' | 'trade-with-us';
 
 export type GoalType = 'PNL TARGET' | 'BALANCE GROWTH' | 'TRADE LIMIT' | 'PAYOUT' | 'BEHAVIORAL';
 export type GoalStatus = 'Active' | 'Completed' | 'Failed' | 'Archived';

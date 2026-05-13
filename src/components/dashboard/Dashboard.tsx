@@ -12,7 +12,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { FilterModal } from './FilterModal';
 
-export function Dashboard() {
+export function Dashboard({ onNavigateToLog }: { onNavigateToLog?: (date: string) => void }) {
   const { trades, customSettings } = useTrades();
   const themeColor = customSettings?.hexColor || '#5b32f6';
   const { user } = useAuth();
@@ -23,6 +23,8 @@ export function Dashboard() {
 
   const [showFilters, setShowFilters] = useState(false);
   const [accountFilter, setAccountFilter] = useState<string>('All');
+  const [directionFilter, setDirectionFilter] = useState<string>('All');
+  const [instrumentFilter, setInstrumentFilter] = useState<string>('All');
 
   const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>(() => {
     const saved = localStorage.getItem('TradeTrack_connected_platforms');
@@ -30,6 +32,7 @@ export function Dashboard() {
   });
 
   const uniqueAccounts = Array.from(new Set(trades.map(t => t.account || 'Manual')));
+  const uniqueInstruments = Array.from(new Set(trades.map(t => t.symbol)));
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
@@ -38,7 +41,10 @@ export function Dashboard() {
     const tDate = new Date(t.date);
     const inMonth = tDate >= monthStart && tDate <= monthEnd;
     const matchAccount = accountFilter === 'All' || (t.account || 'Manual') === accountFilter;
-    return inMonth && matchAccount;
+    const matchDirection = directionFilter === 'All' || t.direction === directionFilter;
+    const matchInstrument = instrumentFilter === 'All' || t.symbol === instrumentFilter;
+    
+    return inMonth && matchAccount && matchDirection && matchInstrument;
   });
   
   // Summary stats for selected month
@@ -221,7 +227,19 @@ export function Dashboard() {
              <FilterModal 
                isOpen={showFilters} 
                onClose={() => setShowFilters(false)} 
-               onReset={() => setAccountFilter('All')} 
+               onReset={() => {
+                 setAccountFilter('All');
+                 setDirectionFilter('All');
+                 setInstrumentFilter('All');
+               }} 
+               accountFilter={accountFilter}
+               setAccountFilter={setAccountFilter}
+               directionFilter={directionFilter}
+               setDirectionFilter={setDirectionFilter}
+               instrumentFilter={instrumentFilter}
+               setInstrumentFilter={setInstrumentFilter}
+               uniqueAccounts={uniqueAccounts}
+               uniqueInstruments={uniqueInstruments}
              />
              <button 
                 onClick={() => {
@@ -314,7 +332,18 @@ export function Dashboard() {
           </div>
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+              <BarChart 
+                data={chartData} 
+                margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+                onClick={(state) => {
+                  if (state && state.activePayload && state.activePayload.length > 0) {
+                    const rawDate = state.activePayload[0].payload.fullDate;
+                    if (rawDate && onNavigateToLog) {
+                      onNavigateToLog(rawDate);
+                    }
+                  }
+                }}
+              >
                 <XAxis 
                   dataKey="date" 
                   stroke="#555" 

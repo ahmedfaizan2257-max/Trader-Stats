@@ -14,6 +14,16 @@ export function TradeLog() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [confirmClear, setConfirmClear] = useState(false);
+  const [filterDate, setFilterDate] = useState<string | null>(() => {
+    const saved = sessionStorage.getItem('highlight_trade_date');
+    if (saved) {
+      sessionStorage.removeItem('highlight_trade_date');
+      return saved;
+    }
+    return null;
+  });
+
+  const displayedTrades = filterDate ? trades.filter(t => t.date.startsWith(filterDate)) : trades;
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -87,7 +97,15 @@ export function TradeLog() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-light tracking-tight">Trade Log</h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-3xl font-light tracking-tight">Trade Log</h2>
+            {filterDate && (
+              <span className="text-sm border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full flex items-center gap-2">
+                Date: {filterDate}
+                <button onClick={() => setFilterDate(null)} className="hover:text-cyan-300 ml-1">&times;</button>
+              </span>
+            )}
+          </div>
           <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm">Track and manage your individual executions.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -158,12 +176,12 @@ export function TradeLog() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
-              {trades.length === 0 ? (
+              {displayedTrades.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="px-6 py-8 text-center text-slate-500">No trades logged yet.</td>
                 </tr>
               ) : (
-                [...trades].reverse().map(trade => (
+                [...displayedTrades].reverse().map(trade => (
                   <tr key={trade.id} className="hover:bg-slate-100 dark:bg-slate-800/30 transition-colors group">
                     <td className="px-6 py-4 font-mono text-slate-700 dark:text-slate-300">{trade.date}</td>
                     <td className="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">{trade.account || 'Manual'}</td>
